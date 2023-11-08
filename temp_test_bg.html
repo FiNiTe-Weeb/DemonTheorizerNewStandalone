@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>aa</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+	
+		*{
+			font-size:20px;
+			font-family:montserrat,sans-serif;
+			color:rgb(16,16,16);
+		}
+		.dark *{
+			color:white;
+		}
+		
+		.background{
+			background:white;
+		}
+		.dark .background{
+			background:rgb(40,40,40);
+		}
+		
+		body{
+			margin:0px;
+			background-image:url("images/tileable_pattern.png")
+		}
+		
+		header{}
+		.mainContainer{
+			display:flex;
+			margin-left:auto;
+			margin-right:auto;
+			min-height:100vh; /*todo: prob will need changing*/
+			max-width: min(83.33%, 1200px);
+			/*box-shadow: 0px 0px 20px rgb(0,255,255);*/ /*this looks bad at the top and bottom, cuz the blur near the corners is rounded*/
+		}
+		.dark .mainContainer{
+			/*box-shadow: 0px 0px 20px rgb(0,25,100);*/
+		}
+		.blurGradient{
+			width:20px;
+			display:inline-block;
+			background:linear-gradient(90deg,rgba(0,255,255,0) 0%,rgba(0,255,255,0.25) 66% 0%,rgba(0,255,255,0.5) 84%,rgba(0,255,255,0.75) 92%,rgba(0,255,255,1) 100%);
+		}
+		.dark .blurGradient{
+			background:linear-gradient(90deg,rgba(0,25,100,0) 0%,rgba(0,25,100,0.25) 66% 0%,rgba(0,25,100,0.5) 84%,rgba(0,25,100,0.75) 92%,rgba(0,25,100,1) 100%);
+		}
+		.flip{
+			transform: rotate(180deg); /*im very smart*/
+		}
+		.mainSideDecoration{
+			display:block;
+			width:12px;
+			background:linear-gradient(0deg,rgba(0,255,255,0.33),rgba(63,255,255,0.17));
+		}
+		.dark .mainSideDecoration{
+			background:linear-gradient(0deg,rgba(0,25,100,0.33),rgba(80,80,80,0.17));
+		}
+		main{
+			padding:16px;
+			width:100%;
+		}
+		footer{}
+		
+	</style>
+</head>
+<body>
+	<header>
+		
+	</header>
+	<div class="mainContainer">
+		<div class="blurGradient"></div>
+		<div class="background" style="width:100%; display:flex">
+			<div class="mainSideDecoration"></div>
+			<main>
+				asd
+			</main>
+			<div class="mainSideDecoration"></div>
+		</div>
+		<div class="blurGradient flip"></div>
+	</div>
+	<footer>
+		
+	</footer>
+	
+	<script type="text/javascript">
+		function toggleDark(){
+			document.body.classList.toggle("dark");
+		}
+	</script>
+</body>
+</html>
