@@ -1,15 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>aa</title>
+	<title>FiNiTe's GD List Calculator</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<style>
 	
+		/*
+		light to dark:
+		rgba(0,255,255,1) to rgba(0,25,100,1)
+		*/
 		*{
 			font-size:20px;
 			font-family:montserrat,sans-serif;
-			color:rgb(16,16,16);
+			color:rgb(63,63,63);
 		}
+		
+		#darkModeToggle{
+			font-size:16px;
+			position:fixed;
+			top:4px;
+			right:4px;
+			z-index:100;
+			text-align:center;
+			display:flex;
+			aspect-ratio:2;
+			padding:4px;
+			border: solid 2px rgb(63,63,63);
+			border-radius:8px;
+			align-items:center;
+			cursor:pointer;
+		}
+		#darkModeToggle:hover{
+			background:#7F7F7F;
+		}
+		
 		.dark *{
 			color:white;
 		}
@@ -26,13 +50,61 @@
 			background-image:url("images/tileable_pattern.png")
 		}
 		
-		header{}
+		header{
+			height:240px;
+			width:100%;
+			/*background-image:url("images/tileable_pattern_flip.png");*/
+			background:white;
+			position:relative; /*allow children to 100% size of this-->*/
+		}
+		.dark header{
+			background:rgb(23,23,23);
+		}
+		.imgHeaderContainer{
+			height:100%;
+			display:flex;
+			justify-content:center;
+			position:relative; /*let it hav z index*/
+			overflow:hidden;
+		}
+		.headerGradient{
+			width:100%;
+			background:linear-gradient(90deg,rgba(0,0,0,0) 0%,rgba(0,0,0,0.25) 66% 0%,rgba(0,0,0,0.5) 84%,rgba(0,0,0,0.75) 92%,rgba(0,0,0,1) 100%);
+			/*background:linear-gradient(90deg,rgba(0,0,0,0.5) 0%,rgba(0,0,0,0.75) 100%);*/
+		}
+		.headerGradient.flip{
+			background:linear-gradient(270deg,rgba(0,0,0,0) 0%,rgba(0,0,0,0.25) 66% 0%,rgba(0,0,0,0.5) 84%,rgba(0,0,0,0.75) 92%,rgba(0,0,0,1) 100%);
+		}
+		.headerBG{
+			/*background-size:calc((100% - 767px)/2) 33%; W I D E*/
+			background-size:240px 120px;
+			display:block;
+			position:absolute;
+			height:100%;
+			width:50%;
+			background-image:url("images/momiji_yay.png");
+		}
+		.dark .headerBG{
+			background-image:url("images/momiji_yay_dark.png");
+		}
+		.headerBG.right{
+			background-position: right top;
+			right:0px;
+		}
+		.topSpacer{
+			background: rgb(222, 255, 255);
+			height:6px;
+		}
+		.dark .topSpacer{
+			background: rgb(47, 47, 47);
+		}
 		.mainContainer{
 			display:flex;
 			margin-left:auto;
 			margin-right:auto;
-			min-height:100vh; /*todo: prob will need changing*/
-			max-width: min(83.33%, 1200px);
+			/*min-height:100vh; /*todo: prob will need changing*/
+			min-height:calc(100vh - 486px);
+			max-width: min(83.33%, 1280px);
 			/*box-shadow: 0px 0px 20px rgb(0,255,255);*/ /*this looks bad at the top and bottom, cuz the blur near the corners is rounded*/
 		}
 		.dark .mainContainer{
@@ -43,11 +115,17 @@
 			display:inline-block;
 			background:linear-gradient(90deg,rgba(0,255,255,0) 0%,rgba(0,255,255,0.25) 66% 0%,rgba(0,255,255,0.5) 84%,rgba(0,255,255,0.75) 92%,rgba(0,255,255,1) 100%);
 		}
+		.blurGradient.flip{
+			background:linear-gradient(270deg,rgba(0,255,255,0) 0%,rgba(0,255,255,0.25) 66% 0%,rgba(0,255,255,0.5) 84%,rgba(0,255,255,0.75) 92%,rgba(0,255,255,1) 100%);
+		}
 		.dark .blurGradient{
 			background:linear-gradient(90deg,rgba(0,25,100,0) 0%,rgba(0,25,100,0.25) 66% 0%,rgba(0,25,100,0.5) 84%,rgba(0,25,100,0.75) 92%,rgba(0,25,100,1) 100%);
 		}
+		.dark .blurGradient.flip{
+			background:linear-gradient(270deg,rgba(0,25,100,0) 0%,rgba(0,25,100,0.25) 66% 0%,rgba(0,25,100,0.5) 84%,rgba(0,25,100,0.75) 92%,rgba(0,25,100,1) 100%);
+		}
 		.flip{
-			transform: rotate(180deg); /*im very smart*/
+			/*transform: rotate(180deg); this SHOULD work but NOOO chrome has to be a fucking moron and leave gaps because rounding numbers properly is too hard*/
 		}
 		.mainSideDecoration{
 			display:block;
@@ -61,33 +139,83 @@
 			padding:16px;
 			width:100%;
 		}
-		footer{}
+		footer{
+			box-shadow:0px 0px 100px rgba(0,255,255,0.33);
+			z-index: 100;
+			position: absolute;
+			background:rgb(213, 255, 255);
+			height:240px;
+			width:100%
+		}
+		.dark footer{
+			box-shadow:0px 0px 100px rgba(0,25,100,0.33);
+			/*background:rgb(0, 25, 100); 1/6th this
+			background:rgb(40,40,40); 5/6ths this*/
+			background:rgb(33,37,50);
+		}
+		.footerTop{
+			display:block;
+			height:12px;
+			width:100%;
+			background-color:rgba(0,255,255,0.33);
+		}
+		.dark .footerTop{
+			background-color:rgba(0,25,100,0.33);
+		}
 		
 	</style>
 </head>
 <body>
+	<div id="darkModeToggle" class="background">
+		Toggle<br>dark mode
+	</div>
 	<header>
-		
+		<div class="headerBG"></div>
+		<div class="headerBG right"></div>
+		<div class="imgHeaderContainer">
+			<div class="headerGradient"></div>
+			<!--why does html add whitespace between images when theres space in the source thats so fucking stupid-->
+			<img src="images/bausha_close_call.jpg" style="height: 100%;" / ><img src="images/finiteThinkV3_512.png" style="height: 100%;background: linear-gradient(0deg,#0d0d1d,#353573);" / ><img src="images/beat_bausher_off_rec.png" style="height: 100%;" / >
+			<div class="headerGradient flip"></div>
+		</div>
 	</header>
+	<div class="topSpacer"></div>
 	<div class="mainContainer">
 		<div class="blurGradient"></div>
 		<div class="background" style="width:100%; display:flex">
 			<div class="mainSideDecoration"></div>
 			<main>
-				asd
+				maybe rbg mode for side glow and maybe other stuff?? xd
+				<br><br>
+				todo: calc improvements:
+				better css
+				make code have standerdized interface to allow easy access to other list apis
+				pointercrate could have a class with constructor that allows overrides for param 1: url, and param 2: score function
+				add support for any other list with api
+				add a section to describe how the calculation works
+				<br><br>
+				add keyword tags (e.g. pointercrate, geometry dash, demonlist, list)
+				<br><br>
+				maybe have a resultant records thing? idk
+				<br><br>
+				github link to userscript in main section, and also add footer links
+				<br><br>
+				i should add darkmode cookie and then have a script in head to handle cookie notice
 			</main>
 			<div class="mainSideDecoration"></div>
 		</div>
+		<!--niflheim reference-->
 		<div class="blurGradient flip"></div>
 	</div>
 	<footer>
-		
+		<div class="footerTop"></div>
 	</footer>
 	
 	<script type="text/javascript">
 		function toggleDark(){
 			document.body.classList.toggle("dark");
 		}
+		document.getElementById("darkModeToggle").addEventListener("click",toggleDark);
 	</script>
 </body>
 </html>
