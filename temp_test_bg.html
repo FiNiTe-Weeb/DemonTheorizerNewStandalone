@@ -139,6 +139,9 @@
 			padding:16px;
 			width:100%;
 		}
+		main pre{
+			white-space: pre-wrap;
+		}
 		footer{
 			box-shadow:0px 0px 100px rgba(0,255,255,0.33);
 			z-index: 100;
@@ -159,9 +162,55 @@
 			width:100%;
 			background-color:rgba(0,255,255,0.33);
 		}
-		.dark .footerTop{
-			background-color:rgba(0,25,100,0.33);
+		.dark .footerTop{ background-color:rgba(0,25,100,0.33); }
+		
+		.flexItemContainer{
+			display:flex;
+			justify-content: center;
 		}
+		
+		.footerItem{
+			height:180px;
+			width:180px;
+			background:rgba(0,0,0,0.0833);
+			border-radius:17px;
+			margin-top:24px;
+			margin-bottom:24px;
+			margin-left:12px;
+			margin-right:12px;
+			text-decoration:none;
+		}
+		
+		.footerItem:hover{ background:rgba(0,0,0,0.0417); }
+		
+		.dark .footerItem{ background:rgba(0,0,0,0.1667); }
+		
+		.dark .footerItem:hover{ background:rgba(0,0,0,0.0833); }
+		
+		.smallImgContainer{
+			width:100%;
+			height:108px;
+			display:flex;
+			justify-content:center;
+		}
+		
+		.smallImg{ margin:16px; }
+		
+		.footerItemLabelContainer{
+			display:flex;
+			align-items:center;
+			height:52px;
+		}
+		
+		.footerItemLabel{
+			text-align:center;
+			width:100%;
+			margin:16px;
+		}
+		
+		.discordLogo{ content:url("images/didcord_logo_blurple.svg"); }
+		
+		.dark .discordLogo{ content:url("images/didcord_logo_white.svg"); }
 		
 	</style>
 </head>
@@ -189,7 +238,7 @@
 				<br><br>
 				todo: calc improvements:
 				better css
-				make code have standerdized interface to allow easy access to other list apis
+				make code have standardized interface to allow easy access to other list apis
 				pointercrate could have a class with constructor that allows overrides for param 1: url, and param 2: score function
 				add support for any other list with api
 				add a section to describe how the calculation works
@@ -199,8 +248,27 @@
 				maybe have a resultant records thing? idk
 				<br><br>
 				github link to userscript in main section, and also add footer links
-				<br><br>
-				i should add darkmode cookie and then have a script in head to handle cookie notice
+				
+				
+				
+				
+				<pre>
+				CHANGELOG:
+				1. split code into several files so its less pain
+				
+				
+				code notes:
+				
+				ADD TODOS TO CHANGELOG WHEN DONE
+				first todo: is have a single api constant definition, and next have api interface
+				todo: i should grab a list of all scores from the listed endpoint and use them to fill remotePts in playerstate, this will function as checker for if score function appears to be wrong (i need to think if check exact value or not, might be fine for exact since js and pc use doubles both iirc), but if i tell user "hey this might be wrong" i should have note that it might be that the player got a new record
+				
+				currently playerstate has real and theoretical records, it also stores value for real and theoretical records, and it doesnt use api value yet, playerstate also has an overrides handler, and a ready bool, it has a func to load player info, and alternatively init an empty player (why cant this be 1 func with early return if id===0?)
+				tRecs (theoretical records) are real records with overrides applied to them
+				playerstate has funcs to init tRecs, add tRec, and remove tRec (actually replaces it with rRec), update theoretical points, and update points delta
+				
+				ok i need to uhm see how the interface gets updated
+				</pre>
 			</main>
 			<div class="mainSideDecoration"></div>
 		</div>
@@ -209,13 +277,58 @@
 	</div>
 	<footer>
 		<div class="footerTop"></div>
+		<div class="flexItemContainer">
+			<a href="https://discord.gg/Ss4DKUB" target="_blank" class="footerItem">
+				<div class="smallImgContainer">
+					<img class="smallImg discordLogo">
+				</div>
+				<div class="footerItemLabelContainer">
+					<div class="footerItemLabel">My Discord server (dead af)</div>
+				</div>
+			</a>
+		</div>
 	</footer>
 	
 	<script type="text/javascript">
 		function toggleDark(){
-			document.body.classList.toggle("dark");
+			let darkEnabled=document.body.classList.toggle("dark");
+			setCookie("darkmode",darkEnabled);
 		}
 		document.getElementById("darkModeToggle").addEventListener("click",toggleDark);
+		
+		function setCookie(name, val, secondsToLive=14515200){ //24 weeks is default lifetime
+			let nowTimeStamp=(new Date()).getTime();
+			let expiryTimeStamp=nowTimeStamp+secondsToLive*1000;
+			let expiryStr="expires="+(new Date(expiryTimeStamp)).toUTCString();
+			document.cookie=name+"="+val+";"+expiryStr+";path=/;samesite=strict";
+		}
+		function getCookie(name){
+			let splitCookies=document.cookie.split(";");
+			for(let i=0;i<splitCookies.length;i++){
+				let splitCookie=splitCookies[i];
+				//remove leading whitespace
+				while(splitCookie[0]==" "){
+					splitCookie=splitCookie.substr(1);
+				}
+				let lastIndex=splitCookie.length-1;
+				//remove trailing whitespace
+				while(splitCookie[lastIndex]==" "){
+					splitCookie=splitCookie.substr(0,lastIndex); //reminder: substr 2nd param is length, substring 2nd param is index
+				}
+				let cookieKeyVal=splitCookie.split("=");
+				if(cookieKeyVal[0]==name){
+					return cookieKeyVal[1];
+				}
+			}
+			return null;
+		}
+		function delCookie(name){
+			setCookie(name,"",0);
+		}
+		
+		if(getCookie("darkmode")=="true"){
+			toggleDark();
+		}
 	</script>
 </body>
 </html>
