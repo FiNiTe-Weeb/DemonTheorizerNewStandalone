@@ -32,6 +32,10 @@
 			opacity:0;
 		}
 		
+		.dark .selector>ul{
+			background-color:rgba(40,40,40,1);
+		}
+		
 		.selector>ul.show{
 			display:block;
 			opacity:1;
@@ -44,8 +48,16 @@
 			background-color:rgba(255,255,255,1);
 		}
 		
+		.dark .selector li{
+			background-color:rgba(40,40,40,1);
+		}
+		
 		.selector li:hover{
 			background-color:rgba(193,193,193,1);
+		}
+		
+		.dark .selector li:hover{
+			background-color:rgba(16,16,16,1);
 		}
 		/*selector styling end*/
 		
@@ -110,4 +122,12 @@
 			margin-left:4px;
 			width:initial;
 			font-size:16px;
+		}
+		
+		input{
+			background:rgb(240,240,240);
+		}
+		
+		.dark input,.dark button{
+			background:rgb(32,32,32);
 		}
