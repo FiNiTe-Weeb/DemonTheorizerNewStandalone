@@ -11,8 +11,8 @@
 		#darkModeToggle{
 			font-size:16px;
 			position:fixed;
-			top:4px;
-			right:4px;
+			top:8px;
+			right:8px;
 			z-index:100;
 			text-align:center;
 			display:flex;
@@ -99,6 +99,9 @@
 			min-height:calc(100vh - 486px);
 			max-width: min(83.33%, 1280px);
 			/*box-shadow: 0px 0px 20px rgb(0,255,255);*/ /*this looks bad at the top and bottom, cuz the blur near the corners is rounded*/
+			
+			position:relative;
+			z-index:200; /* without this the footer goes over the player selector list lmao*/
 		}
 		.dark .mainContainer{
 			/*box-shadow: 0px 0px 20px rgb(0,25,100);*/
