@@ -1,6 +1,6 @@
 class OverridesHandler{
         constructor(){
-            this.overrides={}; //e.g. {1:{prog:Number(progress1)}, {2:{prog:Number(progress2)}}}
+            this.overrides={}; //e.g. {1:{prog:Number(progress1)}, {2:{prog:Number(progress2)}}} (key is level id)
         }
 
         regenTRecs(player){
@@ -21,11 +21,24 @@ class OverridesHandler{
             //todo
         }
 
-        //todo: actually show overrides if they exist when this command runs, (atm its just used for clearing so not an issue lol)
         reloadHTMLList(){
             let listEl=document.getElementById("override-list");
 			if(listEl){
-				listEl.innerHTML="";//idk if theres a more elegant way to delete children
+				
+				//find override elements that should be removed
+				for(let i=listEl.children.length-1;i>=0;i--){
+					let id=listEl.children[i].dataset.demid;
+					if(!this.overrides[id]){
+						this.removeOverrideHTML(id);
+					}
+				}
+				
+				//add elements for new overrides
+				for(let key in this.overrides){
+					if(!this.findOverrideEl(key)){
+						this.addOverrideHTML(key,this.overrides[key].prog);
+					}
+				}
 				this.updateOutput();
 			}
         }
@@ -60,21 +73,11 @@ class OverridesHandler{
             }
             resultEl.innerText="Theoretical pts: "+round(calcState.currentPlayer.ptsTheoretical)+", real pts: "+round(calcState.currentPlayer.ptsLocal)+", resulting in a difference of "+(diff>0?"+":"")+round(diff)+" pts.";
         }
-
-        /*
-        * @param demID - lvl id
-        * @param override - e.g. {prog:100}
-        */
-        addOverride(demID,prog,player){
-            let overrideExisted=!!this.overrides[demID];
-            this.overrides[demID]={prog:prog};
-            player.addTheoreticalRecord(demID,prog);
+		
+		addOverrideHTML(demID,prog){
             let listEl=document.getElementById("override-list");
 
-            let overrideEl;
-            if(overrideExisted){
-                overrideEl=this.findOverrideEl(demID);
-            }
+            let overrideEl=this.findOverrideEl(demID);
 
             //if override didnt exist OR if it existed but couldnt find the element for it
             if(!overrideEl){
@@ -93,16 +96,30 @@ class OverridesHandler{
             overrideEl.appendChild(btnRemove);
 
             this.updateOutput();
-        }
-
-        removeOverride(demID,player){
-            delete this.overrides[demID];
-            player.undoTRec(demID);
+		}
+		removeOverrideHTML(demID){
             let listEl=document.getElementById("override-list");
             let trgEl=this.findOverrideEl(demID);
             if(trgEl){
                 listEl.removeChild(trgEl);
             }
             this.updateOutput();
+		}
+
+        /*
+        * @param demID - lvl id
+        * @param override - e.g. {prog:100}
+        */
+        addOverride(demID,prog,player){
+            let overrideExisted=!!this.overrides[demID];
+            this.overrides[demID]={prog:prog};
+            player.addTheoreticalRecord(demID,prog);
+			this.addOverrideHTML(demID,prog);
+        }
+
+        removeOverride(demID,player){
+            delete this.overrides[demID];
+            player.undoTRec(demID);
+			this.removeOverrideHTML(demID);
         }
     }
