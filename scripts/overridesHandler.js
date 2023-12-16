@@ -21,7 +21,8 @@ class OverridesHandler{
             //todo
         }
 
-        reloadHTMLList(){
+		//update override list and the difference showing box thing below
+        updateOverridesList(){
             let listEl=document.getElementById("override-list");
 			if(listEl){
 				
@@ -54,6 +55,7 @@ class OverridesHandler{
             return null;
         }
 
+		//update the difference showing box thing below
         updateOutput(){
             let diff=calcState.currentPlayer.getPtsDelta();
             let resultEl=document.getElementById("overrides-result");

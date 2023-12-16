@@ -43,7 +43,7 @@ class PlayerState{
                 thisRef.ptsLocal=pts;
                 thisRef.initTRecs();
                 thisRef.updateTheoreticalPoints();
-                thisRef.oHandler.reloadHTMLList();
+                thisRef.oHandler.updateOverridesList();
                 thisRef.ready=true;
             });
         }
