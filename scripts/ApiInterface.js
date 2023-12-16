@@ -2,8 +2,15 @@ class ApiInterface{
 	static currentApi=null;
 	static apiInstances={};
 	static getCurrentApiInstance(){
-		if(currentApi!=null){
-			return apiInstances[current]
+		if(ApiInterface.currentApi!=null){
+			return ApiInterface.apiInstances[ApiInterface.currentApi]
+		}
+	}
+	static setCurrentApiInstance(name){
+		if(ApiInterface.getApiInstance(name)){
+			ApiInterface.currentApi=name;
+		}else{
+			log.e("Did not set API instance as no API \""+name+"\" in ApiInterface.apiInstances");
 		}
 	}
 	static getApiInstance(apiName){
@@ -11,14 +18,14 @@ class ApiInterface{
 			log.e("getApiInstance given falsy apiName:", apiName);
 			return null;
 		}
-		if(!apiInstances[apiName]){
+		if(!ApiInterface.apiInstances[apiName]){
 			log.e("ApiInterface.getApiInstance can't find api \""+apiName+"\"");
 			return null;
 		}
-		return apiInstances[apiName];
+		return ApiInterface.apiInstances[apiName];
 	}
 	static registerApiInstance(name,instance){
-		ApiInterterface.apiInstances[name]=instance;
+		ApiInterface.apiInstances[name]=instance;
 	}
 	
 	constructor(apiEndpoint){
