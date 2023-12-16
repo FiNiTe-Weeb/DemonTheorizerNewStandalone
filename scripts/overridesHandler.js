@@ -122,6 +122,5 @@ class OverridesHandler{
         removeOverride(demID,player){
             delete this.overrides[demID];
             player.undoTRec(demID);
-			this.removeOverrideHTML(demID);
         }
     }

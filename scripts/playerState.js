@@ -17,6 +17,8 @@ class PlayerState{
         }
 
         loadPlayerInfo(){
+			this.playerPreLoad();
+			
             let thisRef=this;
 			let apiInstance=ApiInterface.getCurrentApiInstance();
 			apiInstance.getPlayerRecords(this.id).then(function(records){
@@ -24,7 +26,6 @@ class PlayerState{
 				
 				//put real records
 				let rRecsList=document.getElementById("og-record-list");
-				rRecsList.innerHTML=""; //clear old
 				for(let key in thisRef.rRecs){
 				let demID=Number(key);
 					let r=thisRef.rRecs[key];
@@ -37,31 +38,30 @@ class PlayerState{
 					}
 					
 				}
-
-                //calc real pts
-                let pts=getPtsFromArr(thisRef.rRecs);
-                thisRef.ptsLocal=pts;
-                thisRef.initTRecs();
-                thisRef.updateTheoreticalPoints();
-                thisRef.oHandler.updateOverridesList();
-                thisRef.ready=true;
+                thisRef.playerPostLoad();
             });
         }
 		
 		initEmptyPlayer(){
+			this.playerPreLoad();
             let thisRef=this;
             thisRef.rRecs={};
-			let rRecsList=document.getElementById("og-record-list");
-			rRecsList.innerHTML=""; //clear old
-            thisRef.ptsLocal=0;
-            thisRef.initTRecs();
-            thisRef.updateTheoreticalPoints();
-            let diff=0;
-            let resultEl=document.getElementById("overrides-result");
-            resultEl.style.backgroundColor="rgba(191,191,191,0.20)";
-            resultEl.style.borderColor="rgba(191,191,191,1)";
-            resultEl.innerText="Theoretical pts: "+0+", real pts: "+0+", resulting in a difference of "+(diff>0?"+":"")+round(diff)+" pts.";
-            thisRef.ready=true;
+			Promise.resolve().then(function(){thisRef.playerPostLoad}); //hacky but its cuz playerstate needs calcstate to finish being made, which also makes an empty playerstate...
+		}
+		
+		//move common code in these 2 funcs cuz i hate code duping
+		playerPreLoad(){
+			document.getElementById("og-record-list").innerHTML=""; //clear old
+		}
+		
+		playerPostLoad(){
+            //calc real pts
+            let pts=getPtsFromArr(this.rRecs);
+            this.ptsLocal=pts;
+            this.initTRecs();
+            this.updateTheoreticalPoints();
+            this.oHandler.updateOverridesList();
+            this.ready=true;
 		}
 
         initTRecs(){
@@ -89,6 +89,7 @@ class PlayerState{
         updateTheoreticalPoints(){
             let theoreticalPts=getPtsFromArr(this.tRecs);
             this.ptsTheoretical=theoreticalPts;
+			this.oHandler.updateOverridesList();
         }
 
         getPtsDelta(){
