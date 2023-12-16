@@ -6,7 +6,7 @@ class PlayerState{
             this.ptsLocal=0;//real pts calculated by this script
             this.ptsTheoretical=0;//theoretical pts calculated by this script
             this.ptsRemote=null;//unused until api outputs it, todo: ask sta to add it so i can check if my script is working properly in realtime
-            this.oHandler=new OverridesHandler();
+            this.oHandler=new OverridesHandler(this);
             this.ready=false;
 			if(id===0){
 				this.initEmptyPlayer();
@@ -46,7 +46,7 @@ class PlayerState{
 			this.playerPreLoad();
             let thisRef=this;
             thisRef.rRecs={};
-			Promise.resolve().then(function(){thisRef.playerPostLoad}); //hacky but its cuz playerstate needs calcstate to finish being made, which also makes an empty playerstate...
+			this.playerPostLoad();
 		}
 		
 		//move common code in these 2 funcs cuz i hate code duping

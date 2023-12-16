@@ -1,14 +1,15 @@
 class OverridesHandler{
-        constructor(){
+        constructor(player){
             this.overrides={}; //e.g. {1:{prog:Number(progress1)}, {2:{prog:Number(progress2)}}} (key is level id)
+			this.player=player;
         }
 
-        regenTRecs(player){
+        regenTRecs(){
             log.w("regenTRecs shouldn't be necessary if everything is working right");
-            player.tRecs={...player.rRecs};
+            this.player.tRecs={...this.player.rRecs};
             for(let key in this.overrides){
                 let o=this.overrides[key];
-                player.tRecs[key]=o.prog;
+                this.player.tRecs[key]=o.prog;
             }
         }
 
@@ -57,7 +58,7 @@ class OverridesHandler{
 
 		//update the difference showing box thing below
         updateOutput(){
-            let diff=calcState.currentPlayer.getPtsDelta();
+            let diff=this.player.getPtsDelta();
             let resultEl=document.getElementById("overrides-result");
             switch(Math.sign(diff)){
                 case 1:
@@ -73,7 +74,7 @@ class OverridesHandler{
                     resultEl.style.borderColor="rgba(255,0,0,1)";
                 break;
             }
-            resultEl.innerText="Theoretical pts: "+round(calcState.currentPlayer.ptsTheoretical)+", real pts: "+round(calcState.currentPlayer.ptsLocal)+", resulting in a difference of "+(diff>0?"+":"")+round(diff)+" pts.";
+            resultEl.innerText="Theoretical pts: "+round(this.player.ptsTheoretical)+", real pts: "+round(this.player.ptsLocal)+", resulting in a difference of "+(diff>0?"+":"")+round(diff)+" pts.";
         }
 		
 		addOverrideHTML(demID,prog){
@@ -93,7 +94,8 @@ class OverridesHandler{
             overrideEl.innerText=prog+"% on "+apiInstance.getLevelByID(demID).name+", for "+round(apiInstance.score(demID,prog))+"pts";
             let btnRemove=document.createElement("button");
             btnRemove.innerHTML="&#10060;";
-            btnRemove.addEventListener("click",function(){calcState.currentPlayer.oHandler.removeOverride(demID,calcState.currentPlayer);});
+			let thisRef=this;
+            btnRemove.addEventListener("click",function(){thisRef.player.oHandler.removeOverride(demID,thisRef.player);});
             btnRemove.classList.add("remove-override");
             overrideEl.appendChild(btnRemove);
 
