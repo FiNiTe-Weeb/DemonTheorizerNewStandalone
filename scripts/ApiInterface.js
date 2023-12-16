@@ -54,8 +54,8 @@ class ApiInterface{
 	}
 	
 	//RETURNS PROMISE
-	loadLevels(){
-		log.e("loadLevels method not implemented");
+	init(){
+		log.e("init method not implemented");
 	}
 	
 	//RETURNS PROMISE

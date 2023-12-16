@@ -28,7 +28,7 @@ class PlayerState{
 				for(let key in thisRef.rRecs){
 				let demID=Number(key);
 					let r=thisRef.rRecs[key];
-					let demon=calcState.getDemonByID(demID);
+					let demon=apiInstance.getLevelByID(demID);
 					if(demon){
 						let item=document.createElement("span");
 						item.innerText=r.progress+"% on "+demon.name+", for "+apiInstance.score(demID,r.prog)+" pts";

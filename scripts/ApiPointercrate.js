@@ -6,7 +6,7 @@ class ApiPointercrate extends ApiInterface{
 		this.maxRankingForProgress=maxRankingForProgress;
 	}
 	
-	loadLevels(){
+	init(){
 		let thisRef=this;
 		let levelsPromise=new Promise(function(res,rej){
 			thisRef.pageLoader().then(res);
@@ -24,7 +24,7 @@ class ApiPointercrate extends ApiInterface{
 				thisRef.levelIDtoIndex[item.id]=key;
 			}
 		});
-		return levelsPromise;
+		return levelsPromise.then(function(){return Promise.resolve()}); //return empty promise upon completion (incase ill support another list where id e.g. need to load all players, then init function returning only levels wouldnt make sense)
 	}
 	
 	searchPlayer(name){
@@ -165,7 +165,7 @@ class ApiPointercrate extends ApiInterface{
                 return resp.json();
             }).then(function(data){
                 if(data.length>=pageLength&&limit>pageLength){//probably not last page
-                    let prom=appendPromiseArr(data,demonLoader(afterPage+1,pageLength,limit-pageLength));
+                    let prom=appendPromiseArr(data,thisRef.pageLoader(afterPage+1,pageLength,limit-pageLength));
                     res(prom);
                 }else{//last page
                     res(data);

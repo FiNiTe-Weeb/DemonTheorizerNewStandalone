@@ -19,44 +19,10 @@
 	
 	ApiInterface.registerApiInstance("pointercrate",new ApiPointercrate());
 	ApiInterface.setCurrentApiInstance("pointercrate");
-	ApiInterface.getCurrentApiInstance().loadLevels(); //todo change demonLoaderProm and postDemonLoaderProm stuff to this
-	
-    let demonLoaderProm=null;
-    let postDemonLoaderProm=null;
+	//todo: i need to move initPromise and everything that wants to run then to a func so it can be called again
+	let initApiPromise=ApiInterface.getCurrentApiInstance().init();
 
     //DEFINE FUNCTIONS
-
-
-    /*
-    * load demons via promise
-    * @param page - Page to start loading from, used for recursion
-    * @param pageLength - Self explanatory, also please make sure its a number
-    * @returns - Promise that resolves in array of demons.
-    */
-    function demonLoader(afterPage=0,pageLength=75,limit=LIMIT_DEMONS_NUMBER){//todo: this is a mess omfg
-        log.i("loading page "+(afterPage+1));
-        let fetchPromise=new Promise(function(res,rej){//todo: handle error idk
-            fetch("https://pointercrate.com/api/v2/demons/listed?limit="+Math.min(pageLength,limit)+"&after="+(afterPage*pageLength)).then(function(resp){
-                return resp.json();
-            }).then(function(data){
-                if(data.length>=pageLength&&limit>pageLength){//probably not last page
-                    let prom=appendPromiseArr(data,demonLoader(afterPage+1,pageLength,limit-pageLength));
-                    res(prom);
-                }else{//last page
-                    res(data);
-                }
-            });
-        });
-        return fetchPromise;
-    }
-
-    function postDemonLoader(demons){
-        log.i(demons);
-        calcState.processNewDemons(demons);
-
-    }
-
-    if(TEST){window.getDemonByID=calcState.getDemonByID}
 
     /*
     * @param arr - Array where keys are demonIDs, and values have "progress" property, which is integer percentage progress.
@@ -103,9 +69,6 @@
 
 
     //Start it all
-    demonLoaderProm=demonLoader();
-    postDemonLoaderProm=demonLoaderProm.then(postDemonLoader);
-
     log.i("uwu");
     window.addEventListener('load', loadCalc);
     function loadCalc(){
@@ -218,13 +181,14 @@
     function addOverridesBox(){
 		let levelSelector=document.getElementById("level-selector");
 		let levelSelectorList=levelSelector.getElementsByTagName("ul")[0];
-        postDemonLoaderProm.then(function(){
+		let apiInstance=ApiInterface.getCurrentApiInstance();
+        initApiPromise.then(function(){
             let container=document.createElement("div");
             container.setAttribute("id","fnt-calc-overrides-container");
 
             let pos=1;
             let demon=null;
-            while(demon=calcState.getDemonByPosition(pos)){//yes u can put assignments in there, condition is true if value assigned is truthy
+            while(demon=apiInstance.getLevelByPosition(pos)){//yes u can put assignments in there, condition is true if value assigned is truthy
                 try{
                     let option=document.createElement("li");
                     option.setAttribute("data-id",demon.id);
