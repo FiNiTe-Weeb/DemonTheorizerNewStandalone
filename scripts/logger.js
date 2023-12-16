@@ -1,11 +1,11 @@
     class Logger{
         constructor(){
             if(TEST){
-                this.i=function (){console.log(...arguments);}
-                this.w=function (){console.warn(...arguments);}
+                this.i=console.log;
+                this.w=console.warn;
             }else{
                 this.i=this.w=function(){};
             }
-            this.e=function(){console.error(...arguments);}
+            this.e=console.error;
         }
     }
