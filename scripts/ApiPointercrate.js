@@ -27,6 +27,33 @@ class ApiPointercrate extends ApiInterface{
 		return levelsPromise.then(function(){return Promise.resolve()}); //return empty promise upon completion (incase ill support another list where id e.g. need to load all players, then init function returning only levels wouldnt make sense)
 	}
 	
+	
+	//FOR init
+	/*
+    * load pointercrate levels by pages via promise
+    * @param page - Page to start loading from, used for recursion
+    * @param pageLength - Self explanatory, also please make sure its a number
+    * @param limit - Max number of items left to load, decreases each iteration, used incase totalSize isn't a multiple of pageSize (e.g. 100 and 150 respectively)
+    * @returns - Promise that resolves in array of demons.
+    */
+    pageLoader(afterPage=0,pageLength=this.pageSize,limit=this.totalSize){
+        log.i("loading page "+(afterPage+1));
+		let thisRef=this;
+        let fetchPromise=new Promise(function(res,rej){//todo: handle error idk
+            fetch(thisRef.endpoint+"v2/demons/listed?limit="+Math.min(pageLength,limit)+"&after="+(afterPage*pageLength)).then(function(resp){
+                return resp.json();
+            }).then(function(data){
+                if(data.length>=pageLength&&limit>pageLength){//probably not last page
+                    let prom=appendPromiseArr(data,thisRef.pageLoader(afterPage+1,pageLength,limit-pageLength));
+                    res(prom);
+                }else{//last page
+                    res(data);
+                }
+            });
+        });
+        return fetchPromise;
+    }
+	
 	searchPlayer(name){
 		return fetch(this.endpoint+"v1/players/ranking/?name_contains="+name).then(function(resp){return resp.json();});
 	}
@@ -147,34 +174,4 @@ class ApiPointercrate extends ApiInterface{
             return score;
         }
 	}
-	
-	
-	//FOR loadLevels
-	/*
-    * load pointercrate levels by pages via promise
-    * @param page - Page to start loading from, used for recursion
-    * @param pageLength - Self explanatory, also please make sure its a number
-    * @param limit - Max number of items left to load, decreases each iteration, used incase totalSize isn't a multiple of pageSize (e.g. 100 and 150 respectively)
-    * @returns - Promise that resolves in array of demons.
-    */
-    pageLoader(afterPage=0,pageLength=this.pageSize,limit=this.totalSize){
-        log.i("loading page "+(afterPage+1));
-		let thisRef=this;
-        let fetchPromise=new Promise(function(res,rej){//todo: handle error idk
-            fetch(thisRef.endpoint+"v2/demons/listed?limit="+Math.min(pageLength,limit)+"&after="+(afterPage*pageLength)).then(function(resp){
-                return resp.json();
-            }).then(function(data){
-                if(data.length>=pageLength&&limit>pageLength){//probably not last page
-                    let prom=appendPromiseArr(data,thisRef.pageLoader(afterPage+1,pageLength,limit-pageLength));
-                    res(prom);
-                }else{//last page
-                    res(data);
-                }
-            });
-        });
-        return fetchPromise;
-    }
-	
-	
-	//FOR 
 }
