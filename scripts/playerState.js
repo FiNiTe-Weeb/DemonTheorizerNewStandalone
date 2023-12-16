@@ -21,14 +21,18 @@ class PlayerState{
             fetch("https://pointercrate.com/api/v1/players/"+thisRef.id+"/").then(function(resp){
                 return resp.json();
             }).then(function(playerDat){
-                let unsortedRecords=playerDat.data.records;
+                let unsortedRecords=playerDat.data.records; //api response
                 thisRef.rRecs={};
+				
+				//put non-verifications from api response in player records list
                 for(let i=0;i<unsortedRecords.length;i++){
                     let item=unsortedRecords[i];
                     if(!(item.demon.position>LIMIT_DEMONS_NUMBER)){
                         thisRef.rRecs[item.demon.id]={progress:item.progress};
                     }
                 }
+				
+				//put verifications from api response in player records list
                 let verifiedRecords=playerDat.data.verified;
                 for(let i=0;i<verifiedRecords.length;i++){
                     let item=verifiedRecords[i];
