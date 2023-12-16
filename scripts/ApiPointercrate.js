@@ -1,8 +1,9 @@
 class ApiPointercrate extends ApiInterface{
-	constructor(apiEndpoint="https://pointercrate.com/api/",pageSize=75,totalSize=150){
+	constructor(apiEndpoint="https://pointercrate.com/api/",pageSize=75,totalSize=150,maxRankingForProgress=75){
 		super(apiEndpoint);
 		this.pageSize=pageSize;
 		this.totalSize=totalSize;
+		this.maxRankingForProgress=maxRankingForProgress;
 	}
 	
 	loadLevels(){
@@ -74,13 +75,32 @@ class ApiPointercrate extends ApiInterface{
 		});
 	}
 	
+	score(levelID,progress){
+		if(!this.ready){
+            log.w("Attempted to call getPointsForRecord before level data loaded");
+            return 0;
+		}
+		
+        let level=this.getLevelByID(levelID);
+		if(!level){
+            log.e("Attempted to call getPointsForRecord on non-existant level!! id: "+levelID);
+            return 0;
+		}
+		
+        if(level.position>this.maxRankingForProgress&&(progress<100)){
+            return 0;
+        }else{
+            return this.pointsFormula(level.position,progress,level.requirement);
+        }
+	}
+	
 	/*
     * points formula
     * @param position - Ranking on the list
     * @param progress - % Achieved by player
     * @param requirement - % Required for points
     */
-	score(levelPos=1,progress=100,requirement=50){
+	pointsFormula(position=1,progress=100,requirement=50){
         if(progress>100){progress=100;}//sorry guys ur not allowed to have fun :trol
         if(progress<requirement){
             return 0;

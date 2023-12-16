@@ -18,28 +18,9 @@ class PlayerState{
 
         loadPlayerInfo(){
             let thisRef=this;
-            fetch("https://pointercrate.com/api/v1/players/"+thisRef.id+"/").then(function(resp){
-                return resp.json();
-            }).then(function(playerDat){
-                let unsortedRecords=playerDat.data.records; //api response
-                thisRef.rRecs={};
-				
-				//put non-verifications from api response in player records list
-                for(let i=0;i<unsortedRecords.length;i++){
-                    let item=unsortedRecords[i];
-                    if(!(item.demon.position>LIMIT_DEMONS_NUMBER)){
-                        thisRef.rRecs[item.demon.id]={progress:item.progress};
-                    }
-                }
-				
-				//put verifications from api response in player records list
-                let verifiedRecords=playerDat.data.verified;
-                for(let i=0;i<verifiedRecords.length;i++){
-                    let item=verifiedRecords[i];
-                    if(!(item.position>LIMIT_DEMONS_NUMBER)){
-                        thisRef.rRecs[item.id]={progress:100};
-                    }
-                }
+			let apiInstance=ApiInterface.getCurrentApiInstance();
+			apiInstance.getPlayerRecords(this.id).then(function(records){
+				thisRef.rRecs=records;
 				
 				//put real records
 				let rRecsList=document.getElementById("og-record-list");
@@ -50,7 +31,7 @@ class PlayerState{
 					let demon=calcState.getDemonByID(demID);
 					if(demon){
 						let item=document.createElement("span");
-						item.innerText=r.progress+"% on "+demon.name+", for "+getPointsForRecord(demID,r.prog)+" pts";
+						item.innerText=r.progress+"% on "+demon.name+", for "+apiInstance.score(demID,r.prog)+" pts";
 						rRecsList.appendChild(item);
 						rRecsList.appendChild(document.createElement("br"));
 					}

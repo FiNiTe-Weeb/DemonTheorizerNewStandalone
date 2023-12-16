@@ -16,6 +16,11 @@
     if(TEST){
         window.calcState=calcState;
     }
+	
+	ApiInterface.registerApiInstance("pointercrate",new ApiPointercrate());
+	ApiInterface.setCurrentApiInstance("pointercrate");
+	ApiInterface.getCurrentApiInstance().loadLevels(); //todo change demonLoaderProm and postDemonLoaderProm stuff to this
+	
     let demonLoaderProm=null;
     let postDemonLoaderProm=null;
 
@@ -54,93 +59,13 @@
     if(TEST){window.getDemonByID=calcState.getDemonByID}
 
     /*
-    * calc points for a given demon id and percentage
-    * @param demonID - ID of Demon
-    * @param progress - % Achieved by player
-    */
-    function getPointsForRecord(demonID,progress){
-        if(calcState.ready){
-            let demon=calcState.getDemonByID(demonID);
-            if(demon){
-                if(demon.position>75&&(progress<100)){
-                    return 0;
-                }else{
-                    return pointFormula(demon.position,progress,demon.requirement);
-                }
-            }else{
-                log.e("Attempted to call getPointsForRecord on non-existant demon!! id: "+demonID);
-                return 0;
-            }
-        }else{
-            log.w("Attempted to call getPointsForRecord before demon data loaded");
-            return 0;
-        }
-    }
-
-    if(TEST){window.getPointsForRecord=getPointsForRecord;}
-
-    /*
-    * points formula
-    * @param position - Ranking on the list
-    * @param progress - % Achieved by player
-    * @param requirement - % Required for points
-    */
-    function pointFormula(position=1,progress=100,requirement=50){
-        if(progress>100){progress=100;}//sorry guys ur not allowed to have fun :trol
-        if(progress<requirement){
-            return 0;
-        }else{//god this was a pain to write out
-            let score;
-            if(125<position && position<=150){
-                score=150*Math.exp((1 - position) * Math.log(1 / 30) / (-149));
-            } else if(50 < position && position <= 125){
-                let a = 2.333;
-                let b = 1.884;
-                score=60 * (
-                    Math.pow(a, (
-                        (51 - position) * (
-                            Math.log(30) / 99)
-                        )
-                    )
-                ) + b;
-            }else if(20 < position && position <= 50){
-                let c = 1.01327;
-                let d = 26.489;
-                score= -100 * (
-                    Math.pow(c,position - d)
-                ) + 200;
-            }else if(0 < position && position <= 20){
-                let e = 1.168;
-                let f = 100.39;
-                score=(250 - f) * (
-                    Math.pow(e,1-position)
-                ) + f
-            }else{
-                score=0;
-            }
-            if(progress!==100){
-                score=
-                (
-                    score * Math.pow(5,
-                    (
-                        (progress - requirement)
-                        /
-                        (100 - requirement))
-                    )
-                )/10;
-            }
-            return score;
-        }
-    }
-
-    /*
     * @param arr - Array where keys are demonIDs, and values have "progress" property, which is integer percentage progress.
     */
     function getPtsFromArr(arr){
         let pts=0;
         for(let key in arr){
             let r=arr[key];
-            pts+=getPointsForRecord(key,r.progress);
+            pts+=ApiInterface.getCurrentApiInstance().score(key,r.progress);
         }
         return pts;
     }

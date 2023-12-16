@@ -53,23 +53,33 @@ class ApiInterface{
 		return this.getLevelByID(this.levelPositionToId[levelPos]);
 	}
 	
+	//RETURNS PROMISE
 	loadLevels(){
 		log.e("loadLevels method not implemented");
 	}
 	
+	//RETURNS PROMISE
 	searchPlayer(name){
 		log.e("searchPlayer method not implemented");
 	}
 	
+	//RETURNS PROMISE
 	getPlayerData(playerID,forceUpdate){
 		log.e("getPlayerData method not implemented");
 	}
 	
+	//RETURNS PROMISE
 	getPlayerRecords(playerID,forceUpdate){
 		log.e("getPlayerRecords method not implemented");
 	}
-	
-	score(levelPos=1,progress=100,requirement=50){
+
+    /*
+    * calc points for a given demon id and percentage
+    * @param levelID - ID of Demon
+    * @param progress - % Achieved by player
+	* @return number, the score for the record
+    */
+	score(levelID,progress){
 		log.e("score method not implemented");
 	}
 }

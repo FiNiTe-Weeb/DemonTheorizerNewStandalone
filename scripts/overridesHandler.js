@@ -84,7 +84,8 @@ class OverridesHandler{
                 listEl.appendChild(overrideEl);
             }
 
-            overrideEl.innerText=prog+"% on "+calcState.getDemonByID(demID).name+", for "+round(getPointsForRecord(demID,prog))+"pts";
+			let apiInstance=ApiInterface.getCurrentApiInstance();
+            overrideEl.innerText=prog+"% on "+calcState.getDemonByID(demID).name+", for "+round(apiInstance.score(demID,prog))+"pts";
             let btnRemove=document.createElement("button");
             btnRemove.innerHTML="&#10060;";
             btnRemove.addEventListener("click",function(){calcState.currentPlayer.oHandler.removeOverride(demID,calcState.currentPlayer);});
