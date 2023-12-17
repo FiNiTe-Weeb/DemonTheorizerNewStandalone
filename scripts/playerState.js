@@ -74,18 +74,18 @@ class PlayerState{
             this.tRecs={...this.rRecs};
         }
 
-        addTheoreticalRecord(demID,prog){
+        addTheoreticalRecord(demID,progress){
             if(this.tRecs==null){
                 this.initTRecs();
             }
-            this.tRecs[demID]={progress:prog};
+            this.tRecs[demID]={progress:progress};
             this.updateTheoreticalPoints();
         }
 
         undoTRec(demID){
             let rRec=this.rRecs[demID];
             if(rRec){
-                this.tRecs[demID]={prog:rRec.prog};
+                this.tRecs[demID]={progress:rRec.progress};
             }else{
                 delete this.tRecs[demID];
             }

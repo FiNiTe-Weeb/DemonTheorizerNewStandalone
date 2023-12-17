@@ -1,6 +1,6 @@
 class OverridesHandler{
         constructor(player){
-            this.overrides={}; //e.g. {1:{prog:Number(progress1)}, {2:{prog:Number(progress2)}}} (key is level id)
+            this.overrides={}; //e.g. {1:{progress:Number(progress1)}, {2:{progress:Number(progress2)}}} (key is level id)
 			this.player=player;
 			this.lastFormula=ApiInterface.getCurrentApiInstance().currentFormula;
         }
@@ -10,7 +10,7 @@ class OverridesHandler{
             this.player.tRecs={...this.player.rRecs};
             for(let key in this.overrides){
                 let o=this.overrides[key];
-                this.player.tRecs[key]={progress:o.prog};
+                this.player.tRecs[key]={progress:o.progress};
             }
         }
 
@@ -42,7 +42,7 @@ class OverridesHandler{
 				//add elements for new overrides
 				for(let key in this.overrides){
 					if(!this.findOverrideEl(key)){
-						this.addOverrideHTML(key,this.overrides[key].prog);
+						this.addOverrideHTML(key,this.overrides[key].progress);
 					}
 				}
 				this.updateOutput();
@@ -81,7 +81,7 @@ class OverridesHandler{
             resultEl.innerText="Theoretical pts: "+round(this.player.ptsTheoretical)+", real pts: "+round(this.player.ptsLocal)+", resulting in a difference of "+(diff>0?"+":"")+round(diff)+" pts.";
         }
 		
-		addOverrideHTML(demID,prog){
+		addOverrideHTML(demID,progress){
             let listEl=document.getElementById("override-list");
 
             let overrideEl=this.findOverrideEl(demID);
@@ -95,7 +95,7 @@ class OverridesHandler{
             }
 
 			let apiInstance=ApiInterface.getCurrentApiInstance();
-            overrideEl.innerText=prog+"% on "+apiInstance.getLevelByID(demID).name+", for "+round(apiInstance.score(demID,prog))+"pts";
+            overrideEl.innerText=progress+"% on "+apiInstance.getLevelByID(demID).name+", for "+round(apiInstance.score(demID,progress))+"pts";
             let btnRemove=document.createElement("button");
             btnRemove.innerHTML="&#10060;";
 			let thisRef=this;
@@ -116,13 +116,13 @@ class OverridesHandler{
 
         /*
         * @param demID - lvl id
-        * @param override - e.g. {prog:100}
+        * @param override - e.g. {progress:100}
         */
-        addOverride(demID,prog,player){
+        addOverride(demID,progress,player){
             let overrideExisted=!!this.overrides[demID];
-            this.overrides[demID]={prog:prog};
-            player.addTheoreticalRecord(demID,prog);
-			this.addOverrideHTML(demID,prog);
+            this.overrides[demID]={progress:progress};
+            player.addTheoreticalRecord(demID,progress);
+			this.addOverrideHTML(demID,progress);
         }
 
         removeOverride(demID,player){

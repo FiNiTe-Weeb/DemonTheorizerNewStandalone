@@ -12,7 +12,8 @@
 
     let log=new Logger();
 	
-	ApiInterface.registerApiInstance("pointercrate",new ApiPointercrate());
+	//ApiInterface.registerApiInstance("pointercrate",new ApiPointercrate());
+	ApiInterface.registerApiInstance("pointercrate",new ApiInterface());
 	ApiInterface.setCurrentApiInstance("pointercrate");
 	ApiInterface.getCurrentApiInstance().init();
 
