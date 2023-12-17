@@ -14,6 +14,7 @@
 	
 	ApiInterface.registerApiInstance("pointercrate",new ApiPointercrate());
 	ApiInterface.setCurrentApiInstance("pointercrate");
+	ApiInterface.getCurrentApiInstance().init();
 
     let calcState=new CalcState();
     if(TEST){

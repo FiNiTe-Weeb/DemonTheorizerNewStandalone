@@ -25,6 +25,10 @@ class ApiInterface{
 		return ApiInterface.apiInstances[apiName];
 	}
 	static registerApiInstance(name,instance){
+		if(ApiInterface.apiInstances[name]){
+			log.e("Api with this name already exists");
+			return;
+		}
 		ApiInterface.apiInstances[name]=instance;
 	}
 	
@@ -37,7 +41,10 @@ class ApiInterface{
 		this.loadedPlayersData={}; //playerdata, key is id
 		this.currentFormula="Latest"; //null for latest
 		this.formulas={"Latest":function(){log.e("formulas.latest method not implemented");}};
-		this.initPromise=this.init();
+		let thisRef=this;
+		this.initPromise=new Promise(function(res){
+			thisRef.callOnLoad=res;
+		});
 	}
 	
 	getLevelByID(levelID){

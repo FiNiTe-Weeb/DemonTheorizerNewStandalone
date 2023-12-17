@@ -25,9 +25,9 @@ class ApiPointercrate extends ApiInterface{
 				}
 				thisRef.ready=true;
 				res(levelData);
+				thisRef.callOnLoad();
 			});
 		});
-		return levelsPromise.then(function(){return Promise.resolve()}); //return empty promise upon completion (incase ill support another list where id e.g. need to load all players, then init function returning only levels wouldnt make sense)
 	}
 	
 	
