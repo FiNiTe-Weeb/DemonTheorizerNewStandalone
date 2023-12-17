@@ -51,22 +51,6 @@
         //todo: set loading screen in the meantime maybe
 	}
 
-    //searchable dropdown
-    function initSearchableDropdown(containerEl){
-        let listOuterEl=containerEl.querySelector("#theory-calc-demon-menu-outer");
-        let list=containerEl.querySelector("#theory-calc-demon-menu-inner");
-        let search=containerEl.querySelector("#theory-calc-demon-search");
-        search.addEventListener("click",function(){
-            if(listOuterEl.style.display=="none"){
-                listOuterEl.style.display="block";
-            }else{
-                listOuterEl.style.display="none";
-            }
-        });
-    }
-	
-	
-
 
     //Start it all
     log.i("uwu");
