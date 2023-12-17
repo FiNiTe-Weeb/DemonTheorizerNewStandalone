@@ -35,8 +35,8 @@ class ApiInterface{
         this.levelIDtoIndex=null;
 		this.ready=false;
 		this.loadedPlayersData={}; //playerdata, key is id
-		this.currentFormula="latest"; //null for latest
-		this.formulas={latest:function(){log.e("formulas.latest method not implemented");}};
+		this.currentFormula="Latest"; //null for latest
+		this.formulas={"Latest":function(){log.e("formulas.latest method not implemented");}};
 	}
 	
 	getLevelByID(levelID){
