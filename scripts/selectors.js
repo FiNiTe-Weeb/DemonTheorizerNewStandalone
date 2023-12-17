@@ -34,8 +34,12 @@ function basicSearchListener(evt){
 	let selectorInfo=SelectorsHelper.findDataFromElement(evt.target);
 	let search=selectorInfo.selectorSearch.value.toLowerCase();
 	selectorInfo.data.lastInput=search;
-	for(let j=0;j<selectorInfo.selectorList.children.length;j++){
-		let item=selectorInfo.selectorList.children[j];
+	basicSearchSetVisibility(selectorInfo.selectorList,search);
+}
+
+function basicSearchSetVisibility(list,search){
+	for(let j=0;j<list.children.length;j++){
+		let item=list.children[j];
 		if(item.innerText.toLowerCase().indexOf(search)>=0){
 			item.style.display="list-item";
 		}else{
@@ -44,16 +48,12 @@ function basicSearchListener(evt){
 	}
 }
 
-function runApiSearch(evt){
-	//find selector data
-	let selectorInfo=SelectorsHelper.findDataFromElement(evt.target);
-	let search=selectorInfo.selectorSearch.value;
-	
+function runApiSearch(search,selectorInfo){
 	//dont repeat searches
 	if(selectorInfo.data.lastSearch&&selectorInfo.data.lastSearch==search){
 		return;
 	}
-	log.i("searching for "+evt.target.value);
+	log.i("searching for "+search);
 	selectorInfo.data.lastSearch=search;
 	ApiInterface.getCurrentApiInstance().searchPlayer(search).then(function(dat){
 		selectorInfo.selectorList.innerHTML="";
@@ -75,7 +75,9 @@ function selectorSearchListener(evt){
 		return;
 	}
 	//find selector data
-	let selectorData=SelectorsHelper.findDataFromElement(evt.target).data;
+	let selectorInfo=SelectorsHelper.findDataFromElement(evt.target);
+	let search=selectorInfo.selectorSearch.value;
+	let selectorData=selectorInfo.data;
 	//Selectors[selectorIndex].data.activeTimeoutID
 	
 	//if a timeout is active, clear it and replace with new one
@@ -84,7 +86,7 @@ function selectorSearchListener(evt){
 	}
 	selectorData.activeTimeoutID=setTimeout(function(){
 		delete selectorData.activeTimeoutID;
-		runApiSearch(evt);
+		runApiSearch(search,selectorInfo);
 	},500);
 }
 
@@ -142,6 +144,11 @@ function initSelectors(){
 					selectorList.classList.toggle("show");
 					selector.setAttribute("data-id",id);
 					selectorSearch.value=text;
+					selectorInfo.data.lastInput=""; //reset input so user doest need to manually clear when searching smth new
+					basicSearchSetVisibility(selectorList,"");//unhide shit
+					if(selector.getAttribute("data-api-search")=="player"&&selectorInfo.data.lastSearch!=""){
+						runApiSearch("",selectorInfo) //so it loads top50 if smth else was showing before
+					}
 				}
 			});
 			
@@ -150,7 +157,7 @@ function initSelectors(){
 			switch(apiSearch){
 				case "player":
 					selectorSearch.addEventListener("input",selectorSearchListener);
-					selectorSearch.dispatchEvent(new Event("input")); //so it loads default
+					runApiSearch("",selectorInfo) //so it loads top50 before user does anything
 				break;
 			}
 			selector.classList.add("initialized");
