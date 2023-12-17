@@ -14,8 +14,6 @@
 	
 	ApiInterface.registerApiInstance("pointercrate",new ApiPointercrate());
 	ApiInterface.setCurrentApiInstance("pointercrate");
-	//todo: i need to move initPromise and everything that wants to run then to a func so it can be called again
-	let initApiPromise=ApiInterface.getCurrentApiInstance().init();
 
     let calcState=new CalcState();
     if(TEST){
@@ -57,16 +55,20 @@
     window.addEventListener('load', loadCalc);
     function loadCalc(){
 		SelectorsHelper.init();
-        initApiPromise.then(function(){
-			addOverridesBox();
-			addFormulaSelector();
-		});
+		loadApiSpecific();
         
         let loadRecordsBtn=document.getElementById("load-player-records");
 		loadRecordsBtn.addEventListener("click",loadRecordsOfPlayer);
         let loadFormulaBtn=document.getElementById("load-formula");
 		loadFormulaBtn.addEventListener("click",loadFormula);
     }
+	
+	function loadApiSpecific(){
+        ApiInterface.getCurrentApiInstance().initPromise.then(function(){
+			addOverridesBox();
+			addFormulaSelector();
+		});
+	}
 
     //pro tip: dont EVER user js to build a dom tree (unless u hate urself)
     function addOverridesBox(){
