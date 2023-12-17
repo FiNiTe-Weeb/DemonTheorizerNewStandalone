@@ -1,3 +1,7 @@
+/**
+ * data-index is selector index, data-id is selected item id
+ *
+ */
 class SelectorsHelper{
 	static selectors=[];
 	static init(){
@@ -6,6 +10,19 @@ class SelectorsHelper{
 	static findDataFromElement(el){
 		let index=el.closest(".selector").getAttribute("data-index");
 		return SelectorsHelper.selectors[index];
+	}
+}
+
+function onOptionsListUpdate(selectorInfo){
+	let defaultID=selectorInfo.selector.getAttribute("data-default");
+	let selectedID=selectorInfo.selector.getAttribute("data-id");
+	if(defaultID&&(!selectedID)){
+		//search for selected item
+		let defaultItem=selectorInfo.selectorList.querySelector("[data-id=\""+defaultID+"\"]");
+		if(defaultItem){
+			selectorInfo.selectorSearch.value=defaultItem.innerText;
+			selectorInfo.selector.setAttribute("data-id",defaultID);
+		}
 	}
 }
 
@@ -49,6 +66,7 @@ function runApiSearch(evt){
 			listEl.innerText="#"+item.rank+" "+item.name;
 			selectorInfo.selectorList.appendChild(listEl);
 		}
+		onOptionsListUpdate(selectorInfo);
 	});
 }
 
@@ -135,8 +153,8 @@ function initSelectors(){
 					selectorSearch.dispatchEvent(new Event("input")); //so it loads default
 				break;
 			}
-			
 			selector.classList.add("initialized");
+			onOptionsListUpdate(selectorInfo);
 		}
 	}
 }

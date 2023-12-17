@@ -88,6 +88,7 @@
                 pos++;
             }catch(deezNutz){log.e(deezNutz,pos); break;}
         }
+		onOptionsListUpdate(SelectorsHelper.findDataFromElement(levelSelector)); //todo: maybe move this func into SelectorsHelper
 		let addOverride=document.getElementById("add-override-button");
 		let progInput=document.getElementById("progress-input");
         addOverride.addEventListener("click",function(){
@@ -113,6 +114,7 @@
                 option.innerText=formulaName;
                 formulaSelectorList.appendChild(option);
 		}
+		onOptionsListUpdate(SelectorsHelper.findDataFromElement(formulaSelector));
 	}
 	
 	function loadFormula(evt){
