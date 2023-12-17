@@ -72,10 +72,15 @@
     log.i("uwu");
     window.addEventListener('load', loadCalc);
     function loadCalc(){
-        addOverridesBox();
+        initApiPromise.then(function(){
+			addOverridesBox();
+			addFormulaSelector();
+		});
         
         let loadRecordsBtn=document.getElementById("load-player-records");
 		loadRecordsBtn.addEventListener("click",loadRecordsOfPlayer);
+        let loadFormulaBtn=document.getElementById("load-formula");
+		loadFormulaBtn.addEventListener("click",loadFormula);
 		
 		initSelectors();
 		function initSelectors(){
@@ -179,39 +184,66 @@
 
     //pro tip: dont EVER user js to build a dom tree (unless u hate urself)
     function addOverridesBox(){
+		let apiInstance=ApiInterface.getCurrentApiInstance();
+		
 		let levelSelector=document.getElementById("level-selector");
 		let levelSelectorList=levelSelector.getElementsByTagName("ul")[0];
-		let apiInstance=ApiInterface.getCurrentApiInstance();
-        initApiPromise.then(function(){
-            let container=document.createElement("div");
-            container.setAttribute("id","fnt-calc-overrides-container");
+        let container=document.createElement("div");
+        container.setAttribute("id","fnt-calc-overrides-container");
 
-            let pos=1;
-            let demon=null;
-            while(demon=apiInstance.getLevelByPosition(pos)){//yes u can put assignments in there, condition is true if value assigned is truthy
-                try{
-                    let option=document.createElement("li");
-                    option.setAttribute("data-id",demon.id);
-                    option.innerText="#"+pos+" "+demon.name;
-                    levelSelectorList.appendChild(option);
-					
-                    pos++;
-                }catch(deezNutz){log.e(deezNutz,pos); break;}
-            }
-			let addOverride=document.getElementById("add-override-button");
-			let progInput=document.getElementById("progress-input");
-            addOverride.addEventListener("click",function(){
-                let demID=levelSelector.getAttribute("data-id");
-                let prog=Number(progInput.value);
-                if(!(demID&&(prog==0||prog))){return;}
+        let pos=1;
+        let demon=null;
+        while(demon=apiInstance.getLevelByPosition(pos)){//yes u can put assignments in there, condition is true if value assigned is truthy
+            try{
+                let option=document.createElement("li");
+                option.setAttribute("data-id",demon.id);
+                option.innerText="#"+pos+" "+demon.name;
+                levelSelectorList.appendChild(option);
+				
+                pos++;
+            }catch(deezNutz){log.e(deezNutz,pos); break;}
+        }
+		let addOverride=document.getElementById("add-override-button");
+		let progInput=document.getElementById("progress-input");
+        addOverride.addEventListener("click",function(){
+            let demID=levelSelector.getAttribute("data-id");
+            let prog=Number(progInput.value);
+            if(!(demID&&(prog==0||prog))){return;}
 
-                calcState.currentPlayer.oHandler.addOverride(demID,prog,calcState.currentPlayer);
+            calcState.currentPlayer.oHandler.addOverride(demID,prog,calcState.currentPlayer);
 
-            });
-
-            document.getElementById("overrides-container").append(container);
         });
+
+        document.getElementById("overrides-container").append(container);
     }
+	
+	function addFormulaSelector(){
+		let formulaSelector=document.getElementById("formula-selector");
+		let formulaSelectorList=formulaSelector.getElementsByTagName("ul")[0];
+		
+		let apiInstance=ApiInterface.getCurrentApiInstance();
+		for(formulaName in apiInstance.formulas){
+                let option=document.createElement("li");
+                option.setAttribute("data-id",formulaName);
+                option.innerText=formulaName;
+                formulaSelectorList.appendChild(option);
+		}
+	}
+	
+	function loadFormula(evt){
+        log.i(evt);
+		let selector=document.getElementById("formula-selector");
+        let formulaName=selector.getAttribute("data-id");
+		
+		if(formulaName==null){
+			return;
+		}
+
+        log.i("loading formula",formulaName);
+		ApiInterface.getCurrentApiInstance().currentFormula=formulaName;
+		calcState.currentPlayer.loadPlayerInfo(); //this will auto trigger everything that happens after player load
+	}
+	
     if(TEST){
         window.addOverridesBox=addOverridesBox;
     }

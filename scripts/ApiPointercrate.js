@@ -4,6 +4,7 @@ class ApiPointercrate extends ApiInterface{
 		this.pageSize=pageSize;
 		this.totalSize=totalSize;
 		this.maxRankingForProgress=maxRankingForProgress;
+		this.formulas={latest:this.pointsFormula,test:this.test};
 	}
 	
 	init(){
@@ -115,9 +116,12 @@ class ApiPointercrate extends ApiInterface{
 		
         if(level.position>this.maxRankingForProgress&&(progress<100)){
             return 0;
-        }else{
-            return this.pointsFormula(level.position,progress,level.requirement);
         }
+        return this.formulas[this.currentFormula](level.position,progress,level.requirement);
+	}
+	
+	test(pos){
+		return pos;
 	}
 	
 	/*
