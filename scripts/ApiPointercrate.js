@@ -9,20 +9,19 @@ class ApiPointercrate extends ApiInterface{
 	init(){
 		let thisRef=this;
 		let levelsPromise=new Promise(function(res,rej){
-			thisRef.pageLoader().then(res);
-		});
-		this.ready=true;
-		
+			thisRef.pageLoader().then(function(levelData){
 		//populate internal data
-		levelsPromise.then(function(levelData){
-			thisRef.levelData=levelData;
-			thisRef.levelPositionToId={};
-			thisRef.levelIDtoIndex={};
-			for(let key in thisRef.levelData){
-				let item=thisRef.levelData[key];
-				thisRef.levelPositionToId[item.position]=item.id;
-				thisRef.levelIDtoIndex[item.id]=key;
-			}
+				thisRef.levelData=levelData;
+				thisRef.levelPositionToId={};
+				thisRef.levelIDtoIndex={};
+				for(let key in thisRef.levelData){
+					let item=thisRef.levelData[key];
+					thisRef.levelPositionToId[item.position]=item.id;
+					thisRef.levelIDtoIndex[item.id]=key;
+				}
+				thisRef.ready=true;
+				res(levelData);
+			});
 		});
 		return levelsPromise.then(function(){return Promise.resolve()}); //return empty promise upon completion (incase ill support another list where id e.g. need to load all players, then init function returning only levels wouldnt make sense)
 	}
