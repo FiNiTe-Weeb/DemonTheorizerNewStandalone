@@ -55,6 +55,7 @@ class ApiInterface{
 		return this.getLevelByID(this.levelPositionToId[levelPos]);
 	}
 	
+	//TODO: put response examples in here to have a record of expected structure
 	//RETURNS PROMISE
 	init(){
 		log.e("init method not implemented");

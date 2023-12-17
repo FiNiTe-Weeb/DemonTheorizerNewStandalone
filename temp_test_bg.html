@@ -93,6 +93,14 @@
 				todo: make formula selector not need another button press
 				make progress select not stick up into demon select
 				
+				how loading should be:
+
+				first: a function should clear everything that should be (if anything), show a loader, and then run the init process, a loading icon should show (if loading fails, i need to show a popup)
+				
+				overrides should be under apiInterface, as same override doesnt make sense on other list
+				
+				when a change happens, it should be given to overrides handler, which handles its html, and then passes it to player which handles its html
+				
 				priority list:
 				1. also need: fix selector defaults + handling firefox autofill
 				2. decouple overrides from player+fix the mess i did with multi formula handler (ig i need to rethink updating chains)
