@@ -13,9 +13,21 @@
     let log=new Logger();
 	
 	ApiInterface.registerApiInstance("pointercrate",new ApiPointercrate());
-	//ApiInterface.registerApiInstance("pointercrate",new ApiInterface());
+	ApiInterface.registerApiInstance("test",new ApiInterface());
 	ApiInterface.setCurrentApiInstance("pointercrate");
 	ApiInterface.getCurrentApiInstance().init();
+	
+	//code to start test api:
+	/*
+		ApiInterface.setCurrentApiInstance("test");
+		let apiInstance=ApiInterface.getCurrentApiInstance();
+		apiInstance.init();
+		apiInstance.initPromise.then(loadCalc);
+		apiInstance.initPromise.then(function(){
+			runApiSearch("",SelectorsHelper.findDataFromElement(document.getElementById("player-selector")));
+		});
+
+	*/
 
     let calcState=new CalcState();
     if(TEST){
@@ -66,6 +78,11 @@
     }
 	
 	function loadApiSpecific(){
+		//clear anything that might be set already
+		let elementsToClear=document.querySelectorAll(".selector ul");
+		for(let i=0;i<elementsToClear.length;i++){
+			elementsToClear[i].innerHTML="";
+		}
         ApiInterface.getCurrentApiInstance().initPromise.then(function(){
 			addOverridesBox();
 			addFormulaSelector();
