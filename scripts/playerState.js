@@ -32,7 +32,7 @@ class PlayerState{
 					let demon=apiInstance.getLevelByID(demID);
 					if(demon){
 						let item=document.createElement("span");
-						item.innerText=r.progress+"% on "+demon.name+", for "+apiInstance.score(demID,r.prog)+" pts";
+						item.innerText=r.progress+"% on "+demon.name+", for "+round(apiInstance.score(demID,r.prog))+" pts";
 						rRecsList.appendChild(item);
 						rRecsList.appendChild(document.createElement("br"));
 					}
