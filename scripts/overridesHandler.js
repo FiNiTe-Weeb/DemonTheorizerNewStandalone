@@ -10,7 +10,7 @@ class OverridesHandler{
             this.player.tRecs={...this.player.rRecs};
             for(let key in this.overrides){
                 let o=this.overrides[key];
-                this.player.tRecs[key]=o.prog;
+                this.player.tRecs[key]={progress:o.prog};
             }
         }
 
