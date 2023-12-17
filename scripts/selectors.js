@@ -5,7 +5,79 @@
 class SelectorsHelper{
 	static selectors=[];
 	static init(){
-		
+		let selectors=document.getElementsByClassName("selector");
+		for(let i=0;i<selectors.length;i++){
+			let selector=selectors[i];
+			if(!selector.classList.contains("initialized")){
+				let selectorSearch=selector.getElementsByTagName("input")[0];
+				let selectorList=selector.getElementsByTagName("ul")[0];
+				
+				let selectorIndex=SelectorsHelper.selectors.push({
+					selector:selector,
+					selectorSearch:selectorSearch,
+					selectorList:selectorList,
+					data:{}
+				})-1; //push returns length
+				selector.setAttribute("data-index",selectorIndex);
+				let selectorInfo=SelectorsHelper.selectors[selectorIndex];
+				
+				//todo: handle firefox autofill
+				//todo: when backing out i should store search and current item, so when they back out it shows last selected again, but when they reopen it has their search
+				
+				//add listener to open list when searchbox is clicked
+				selectorSearch.addEventListener("click",function(){
+					if(!selectorList.classList.contains("show")){ //if clicked when opening search, show last input
+						selectorSearch.value=(selectorInfo.data.lastInput==undefined)?"":selectorInfo.data.lastInput;
+					}
+					selectorSearch.dispatchEvent(new InputEvent("input"));//so search is empty when u click it again
+					selectorList.classList.add("show");
+				});
+				
+				//close when clicking elsewhere and revert to showing selected player (note: fix this for when ur searching)
+				document.addEventListener("click",function(evt){
+					if(!selector.contains(evt.target)){
+						selectorList.classList.remove("show");
+						let selectedID=selector.getAttribute("data-id");
+						if(selectedID){
+							let listItem=selectorList.querySelector("[data-id=\""+selectedID+"\"]");
+							if(listItem){
+								selectorSearch.value=listItem.innerHTML;
+							}
+						}
+					}
+				});
+				
+				selectorSearch.addEventListener("input",basicSearchListener);
+				
+				//react to selection happening in the list
+				selectorList.addEventListener("click",function(evt){
+					let item=evt.target;
+					let id=item.getAttribute("data-id");
+					let text=item.innerText;
+					if(item&&(id||id===0)){
+						selectorList.classList.toggle("show");
+						selector.setAttribute("data-id",id);
+						selectorSearch.value=text;
+						selectorInfo.data.lastInput=""; //reset input so user doest need to manually clear when searching smth new
+						basicSearchSetVisibility(selectorList,"");//unhide shit
+						if(selector.getAttribute("data-api-search")=="player"&&selectorInfo.data.lastSearch!=""){
+							runApiSearch("",selectorInfo) //so it loads top50 if smth else was showing before
+						}
+					}
+				});
+				
+				//http request search
+				let apiSearch=selector.getAttribute("data-api-search");
+				switch(apiSearch){
+					case "player":
+						selectorSearch.addEventListener("input",selectorSearchListener);
+						runApiSearch("",selectorInfo) //so it loads top50 before user does anything
+					break;
+				}
+				selector.classList.add("initialized");
+				onOptionsListUpdate(selectorInfo);
+			}
+		}
 	}
 	static findDataFromElement(el){
 		let index=el.closest(".selector").getAttribute("data-index");
@@ -89,80 +161,3 @@ function selectorSearchListener(evt){
 		runApiSearch(search,selectorInfo);
 	},500);
 }
-
-function initSelectors(){
-	let selectors=document.getElementsByClassName("selector");
-	for(let i=0;i<selectors.length;i++){
-		let selector=selectors[i];
-		if(!selector.classList.contains("initialized")){
-			let selectorSearch=selector.getElementsByTagName("input")[0];
-			let selectorList=selector.getElementsByTagName("ul")[0];
-			
-			let selectorIndex=SelectorsHelper.selectors.push({
-				selector:selector,
-				selectorSearch:selectorSearch,
-				selectorList:selectorList,
-				data:{}
-			})-1; //push returns length
-			selector.setAttribute("data-index",selectorIndex);
-			let selectorInfo=SelectorsHelper.selectors[selectorIndex];
-			
-			//todo: handle firefox autofill
-			//todo: when backing out i should store search and current item, so when they back out it shows last selected again, but when they reopen it has their search
-			
-			//add listener to open list when searchbox is clicked
-			selectorSearch.addEventListener("click",function(){
-				if(!selectorList.classList.contains("show")){ //if clicked when opening search, show last input
-					selectorSearch.value=(selectorInfo.data.lastInput==undefined)?"":selectorInfo.data.lastInput;
-				}
-				selectorSearch.dispatchEvent(new InputEvent("input"));//so search is empty when u click it again
-				selectorList.classList.add("show");
-			});
-			
-			//close when clicking elsewhere and revert to showing selected player (note: fix this for when ur searching)
-			document.addEventListener("click",function(evt){
-				if(!selector.contains(evt.target)){
-					selectorList.classList.remove("show");
-					let selectedID=selector.getAttribute("data-id");
-					if(selectedID){
-						let listItem=selectorList.querySelector("[data-id=\""+selectedID+"\"]");
-						if(listItem){
-							selectorSearch.value=listItem.innerHTML;
-						}
-					}
-				}
-			});
-			
-			selectorSearch.addEventListener("input",basicSearchListener);
-			
-			//react to selection happening in the list
-			selectorList.addEventListener("click",function(evt){
-				let item=evt.target;
-				let id=item.getAttribute("data-id");
-				let text=item.innerText;
-				if(item&&(id||id===0)){
-					selectorList.classList.toggle("show");
-					selector.setAttribute("data-id",id);
-					selectorSearch.value=text;
-					selectorInfo.data.lastInput=""; //reset input so user doest need to manually clear when searching smth new
-					basicSearchSetVisibility(selectorList,"");//unhide shit
-					if(selector.getAttribute("data-api-search")=="player"&&selectorInfo.data.lastSearch!=""){
-						runApiSearch("",selectorInfo) //so it loads top50 if smth else was showing before
-					}
-				}
-			});
-			
-			//http request search
-			let apiSearch=selector.getAttribute("data-api-search");
-			switch(apiSearch){
-				case "player":
-					selectorSearch.addEventListener("input",selectorSearchListener);
-					runApiSearch("",selectorInfo) //so it loads top50 before user does anything
-				break;
-			}
-			selector.classList.add("initialized");
-			onOptionsListUpdate(selectorInfo);
-		}
-	}
-}
-setTimeout(initSelectors,1);

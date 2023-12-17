@@ -56,6 +56,7 @@
     log.i("uwu");
     window.addEventListener('load', loadCalc);
     function loadCalc(){
+		SelectorsHelper.init();
         initApiPromise.then(function(){
 			addOverridesBox();
 			addFormulaSelector();
