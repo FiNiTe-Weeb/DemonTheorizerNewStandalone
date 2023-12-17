@@ -7,20 +7,20 @@
 
     //DEFINE VARS/CONSTS
 
-    let calcState=new CalcState();
-
     const TEST=true;
     const LIMIT_DEMONS_NUMBER=150;
 
     let log=new Logger();
-    if(TEST){
-        window.calcState=calcState;
-    }
 	
 	ApiInterface.registerApiInstance("pointercrate",new ApiPointercrate());
 	ApiInterface.setCurrentApiInstance("pointercrate");
 	//todo: i need to move initPromise and everything that wants to run then to a func so it can be called again
 	let initApiPromise=ApiInterface.getCurrentApiInstance().init();
+
+    let calcState=new CalcState();
+    if(TEST){
+        window.calcState=calcState;
+    }
 
     //DEFINE FUNCTIONS
 
@@ -241,7 +241,11 @@
 
         log.i("loading formula",formulaName);
 		ApiInterface.getCurrentApiInstance().currentFormula=formulaName;
-		calcState.currentPlayer.loadPlayerInfo(); //this will auto trigger everything that happens after player load
+		calcState.currentPlayer.initPlayer().then(function(){ //todo: fix whatever the fuck this is
+			calcState.currentPlayer.oHandler.regenTRecs();
+			calcState.currentPlayer.updateTheoreticalPoints();
+			calcState.currentPlayer.oHandler.updateOverridesList();
+		});
 	}
 	
     if(TEST){

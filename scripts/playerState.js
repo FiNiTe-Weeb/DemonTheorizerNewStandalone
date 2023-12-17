@@ -8,26 +8,31 @@ class PlayerState{
             this.ptsRemote=null;//unused until api outputs it, todo: ask sta to add it so i can check if my script is working properly in realtime
             this.oHandler=new OverridesHandler(this);
             this.ready=false;
-			if(id===0){
-				this.initEmptyPlayer();
-			}
-            else if(id!=null){
-                this.loadPlayerInfo();
-            }
+			this.initPlayer();
         }
+		
+		initPlayer(){
+			if(this.id===0){
+				return this.initEmptyPlayer();
+			}
+            else if(this.id!=null){
+                return this.loadPlayerInfo();
+            }
+			return Promise.reject();
+		}
 
         loadPlayerInfo(){
 			this.playerPreLoad();
 			
             let thisRef=this;
 			let apiInstance=ApiInterface.getCurrentApiInstance();
-			apiInstance.getPlayerRecords(this.id).then(function(records){
+			return apiInstance.getPlayerRecords(this.id).then(function(records){
 				thisRef.rRecs=records;
 				
 				//put real records
 				let rRecsList=document.getElementById("og-record-list");
 				for(let key in thisRef.rRecs){
-				let demID=Number(key);
+					let demID=Number(key);
 					let r=thisRef.rRecs[key];
 					let demon=apiInstance.getLevelByID(demID);
 					if(demon){
@@ -47,6 +52,7 @@ class PlayerState{
             let thisRef=this;
             thisRef.rRecs={};
 			this.playerPostLoad();
+			return Promise.resolve(); //temp hack so i can update override stuff after player loads (cuz i also need loadPlayerInfo handling so has 2 be promise)
 		}
 		
 		//move common code in these 2 funcs cuz i hate code duping

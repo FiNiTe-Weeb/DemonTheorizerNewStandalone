@@ -2,10 +2,11 @@ class OverridesHandler{
         constructor(player){
             this.overrides={}; //e.g. {1:{prog:Number(progress1)}, {2:{prog:Number(progress2)}}} (key is level id)
 			this.player=player;
+			this.lastFormula=ApiInterface.getCurrentApiInstance().currentFormula;
         }
 
+		//todo: temp, wont be needed after lmao
         regenTRecs(){
-            log.w("regenTRecs shouldn't be necessary if everything is working right");
             this.player.tRecs={...this.player.rRecs};
             for(let key in this.overrides){
                 let o=this.overrides[key];
@@ -25,12 +26,15 @@ class OverridesHandler{
 		//update override list and the difference showing box thing below
         updateOverridesList(){
             let listEl=document.getElementById("override-list");
+			let formula=ApiInterface.getCurrentApiInstance().currentFormula;
+			let formulaChanged=formula!=this.lastFormula;
+			this.lastFormula=formula;
 			if(listEl){
 				
 				//find override elements that should be removed
 				for(let i=listEl.children.length-1;i>=0;i--){
 					let id=listEl.children[i].dataset.demid;
-					if(!this.overrides[id]){
+					if(formulaChanged||(!this.overrides[id])){
 						this.removeOverrideHTML(id);
 					}
 				}
