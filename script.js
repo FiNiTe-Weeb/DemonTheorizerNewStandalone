@@ -150,8 +150,7 @@
 
         log.i("loading formula",formulaName);
 		ApiInterface.getCurrentApiInstance().currentFormula=formulaName;
-		calcState.currentPlayer.initPlayer().then(function(){ //todo: fix whatever the fuck this is
-			calcState.currentPlayer.oHandler.regenTRecs();
+		calcState.currentPlayer.initPlayer().then(function(){
 			calcState.currentPlayer.updateTheoreticalPoints();
 			calcState.currentPlayer.oHandler.updateOverridesList();
 		});
