@@ -16,18 +16,6 @@
 	ApiInterface.registerApiInstance("test",new ApiInterface());
 	ApiInterface.setCurrentApiInstance("pointercrate");
 	ApiInterface.getCurrentApiInstance().init();
-	
-	//code to start test api:
-	/*
-		ApiInterface.setCurrentApiInstance("test");
-		let apiInstance=ApiInterface.getCurrentApiInstance();
-		apiInstance.init();
-		apiInstance.initPromise.then(loadCalc);
-		apiInstance.initPromise.then(function(){
-			runApiSearch("",SelectorsHelper.findDataFromElement(document.getElementById("player-selector")));
-		});
-
-	*/
 
     let calcState=new CalcState();
     if(TEST){
@@ -70,11 +58,14 @@
     function loadCalc(){
 		SelectorsHelper.init();
 		loadApiSpecific();
+		calcState.currentPlayer=new PlayerState(0);
         
         let loadRecordsBtn=document.getElementById("load-player-records");
 		loadRecordsBtn.addEventListener("click",loadRecordsOfPlayer);
         let loadFormulaBtn=document.getElementById("load-formula");
 		loadFormulaBtn.addEventListener("click",loadFormula);
+        let loadApiBtn=document.getElementById("load-api");
+		loadApiBtn.addEventListener("click",loadApi);
     }
 	
 	function loadApiSpecific(){
@@ -86,6 +77,7 @@
         ApiInterface.getCurrentApiInstance().initPromise.then(function(){
 			addOverridesBox();
 			addFormulaSelector();
+			addApiSelector();
 		});
 	}
 
@@ -139,12 +131,27 @@
 		onOptionsListUpdate(SelectorsHelper.findDataFromElement(formulaSelector));
 	}
 	
+	function addApiSelector(){
+		let apiSelector=document.getElementById("api-selector");
+		let apiSelectorList=apiSelector.getElementsByTagName("ul")[0];
+		
+		let apiInstance=ApiInterface.getCurrentApiInstance();
+		for(apiName in calcState.apis){
+                let option=document.createElement("li");
+                option.setAttribute("data-id",apiName);
+                option.innerText=calcState.apis[apiName].name;
+                apiSelectorList.appendChild(option);
+		}
+		onOptionsListUpdate(SelectorsHelper.findDataFromElement(apiSelector));
+	}
+	
 	function loadFormula(evt){
         log.i(evt);
 		let selector=document.getElementById("formula-selector");
         let formulaName=selector.getAttribute("data-id");
 		
-		if(formulaName==null){
+		if(formulaName==null||(!ApiInterface.getCurrentApiInstance().formulas[formulaName])){
+			log.e("no formula "+formulaName);
 			return;
 		}
 
@@ -153,6 +160,29 @@
 		calcState.currentPlayer.initPlayer().then(function(){
 			calcState.currentPlayer.updateTheoreticalPoints();
 			calcState.currentPlayer.oHandler.updateOverridesList();
+		});
+	}
+	
+	function loadApi(evt){
+        log.i(evt);
+		let selector=document.getElementById("api-selector");
+        let apiID=selector.getAttribute("data-id");
+		
+		if(apiID==null||(!ApiInterface.apiInstances[apiID])){
+			log.e("no API "+apiID);
+			return;
+		}
+
+        log.i("loading API",apiID);
+		
+		ApiInterface.setCurrentApiInstance(apiID);
+		let apiInstance=ApiInterface.getCurrentApiInstance();
+		if(!apiInstance.ready){
+			apiInstance.init();
+		}
+		apiInstance.initPromise.then(loadCalc);
+		apiInstance.initPromise.then(function(){
+			runApiSearch("",SelectorsHelper.findDataFromElement(document.getElementById("player-selector")));
 		});
 	}
 	

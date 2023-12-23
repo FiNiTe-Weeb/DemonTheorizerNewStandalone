@@ -1,5 +1,9 @@
 	class CalcState{
         constructor(){
-            this.currentPlayer=new PlayerState(0);
+            this.currentPlayer=null;
+			this.apis={
+				"pointercrate":{name:"Pointercrate"},
+				"test":{name:"Test API"}
+			};
         }
     }
