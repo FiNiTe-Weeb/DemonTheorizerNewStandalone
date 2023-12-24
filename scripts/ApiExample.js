@@ -1,58 +1,8 @@
-class ApiInterface{
-	static currentApi=null;
-	static apiInstances={};
-	static getCurrentApiInstance(){
-		if(ApiInterface.currentApi!=null){
-			return ApiInterface.apiInstances[ApiInterface.currentApi]
-		}
-	}
-	static setCurrentApiInstance(name){
-		if(ApiInterface.getApiInstance(name)){
-			ApiInterface.currentApi=name;
-		}else{
-			log.e("Did not set API instance as no API \""+name+"\" in ApiInterface.apiInstances");
-		}
-	}
-	static getApiInstance(apiName){
-		if(!apiName){
-			log.e("getApiInstance given falsy apiName:", apiName);
-			return null;
-		}
-		if(!ApiInterface.apiInstances[apiName]){
-			log.e("ApiInterface.getApiInstance can't find api \""+apiName+"\"");
-			return null;
-		}
-		return ApiInterface.apiInstances[apiName];
-	}
-	static registerApiInstance(name,instance){
-		if(ApiInterface.apiInstances[name]){
-			log.e("Api with this name already exists");
-			return;
-		}
-		ApiInterface.apiInstances[name]=instance;
-	}
+class ApiExample{
 	
 	constructor(apiEndpoint){
-		this.endpoint=apiEndpoint; //api endpoint/base url
-		this.levelData=null; //levels data, key is determined by loader function
-        this.levelPositionToId=null;
-        this.levelIDtoIndex=null;
-		this.ready=false;
-		this.loadedPlayersData={}; //playerdata, key is id
-		this.currentFormula="Latest"; //null for latest
-		this.formulas={"Latest":function(){log.e("formulas.latest method not implemented");}};
-		let thisRef=this;
-		this.initPromise=new Promise(function(res){
-			thisRef.callOnLoad=res;
-		});
-	}
-	
-	getLevelByID(levelID){
-        return this.levelData[this.levelIDtoIndex[levelID]];
-	}
-	
-	getLevelByPosition(levelPos){
-		return this.getLevelByID(this.levelPositionToId[levelPos]);
+		super();
+		this.exampleVar="hi";
 	}
 	
 	//OVERWRITE

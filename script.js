@@ -13,6 +13,7 @@
     let log=new Logger();
 	
 	ApiInterface.registerApiInstance("pointercrate",new ApiPointercrate());
+	ApiInterface.registerApiInstance("insaneDemonList",new ApiInsaneDemonList());
 	ApiInterface.registerApiInstance("test",new ApiInterface());
 	ApiInterface.setCurrentApiInstance("pointercrate");
 	ApiInterface.getCurrentApiInstance().init();
@@ -33,7 +34,7 @@
 
         log.i("loading records for playerID",playerID);
         if(playerID==calcState.currentPlayer.id){return;} //return if player already selected
-        if(isNaN(playerID)||(playerID==null)||(playerID==0)){return;} //return if playerID invalid (non-type-specific compare to 0 is intentional)
+        if((playerID==null)||(playerID==0)){return;} //return if playerID invalid (non-type-specific compare to 0 is intentional)
 
         calcState.currentPlayer=new PlayerState(playerID);
         //todo: set loading screen in the meantime maybe
