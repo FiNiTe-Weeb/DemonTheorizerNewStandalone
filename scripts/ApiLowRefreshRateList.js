@@ -1,7 +1,7 @@
 class ApiLowRefreshRateList extends ApiInterface{
 	
 	constructor(){
-		super("/samples/lrrApi/");
+		super("https://gdlrrlist.com/api/v1/");
 		this.playerData={};
 		this.sortedPlayerKeys=[];
 		this.levelNameToID={};
@@ -13,7 +13,7 @@ class ApiLowRefreshRateList extends ApiInterface{
 	
 	init(){
 		let thisRef=this;
-		let levelPromise=fetch(this.endpoint+"demons.json").then(function(resp){return resp.json();}).then(function(data){
+		let levelPromise=fetch(this.endpoint+"demons").then(function(resp){return resp.json();}).then(function(data){
 			thisRef.levelData={};
 			thisRef.levelPositionToId={};
 			thisRef.levelIDtoIndex={};
@@ -34,7 +34,7 @@ class ApiLowRefreshRateList extends ApiInterface{
 			}
 			
 		});
-		let playerPromise=fetch(this.endpoint+"leaderboard.json").then(function(resp){return resp.json();}).then(function(data){
+		let playerPromise=fetch(this.endpoint+"leaderboard").then(function(resp){return resp.json();}).then(function(data){
 			thisRef.playerData=data;
 		});
 		Promise.all([levelPromise,playerPromise]).then(function(){
