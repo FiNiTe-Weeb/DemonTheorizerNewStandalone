@@ -6,7 +6,7 @@
 	<link type="text/css" rel="stylesheet" href="/css/mainSiteStuff.css" />
 	<link type="text/css" rel="stylesheet" href="/css/calcStuff.css" />
 	<meta content="FiNiTe's GD List Calculator (WIP)" property="og:title" />
-	<meta content="How many list Geometry Dash Pointercrate official demonlist points would I have if I got x% on y demon?????" property="og:description" />
+	<meta content="How many list Geometry Dash demonlist points would I have if I got x% on y demon?????" property="og:description" />
 	<meta content="https://list-calc.finite-weeb.xyz" property="og:url" />
 	<meta content="https://list-calc.finite-weeb.xyz/images/finiteThinkV3_icon_alt_512.png" property="og:image" />
 </head>
@@ -30,111 +30,59 @@
 		<div class="background" style="width:100%; display:flex">
 			<div class="mainSideDecoration"></div>
 			<main>
-				<div style="display:none;">
-					maybe rbg mode for side glow and maybe other stuff?? xd
-					<br><br>
-					todo: calc improvements:
-					better css
-					make code have standardized interface to allow easy access to other list apis
-					pointercrate could have a class with constructor that allows overrides for param 1: url, and param 2: score function
-					add support for any other list with api
-					add a section to describe how the calculation works
-					<br><br>
-					add keyword tags (e.g. pointercrate, geometry dash, demonlist, list)
-					<br><br>
-					maybe have a resultant records thing? idk
-					<br><br>
-					github link to userscript in main section, and also add footer links
-				
-				
-				
-				
-					<pre>
-					CHANGELOG:
-					1. split code into several files so its less pain
-					
-					
-					code notes:
-				
-					ADD TODOS TO CHANGELOG WHEN DONE
-					first todo: is have a single api constant definition, and next have api interface
-					todo: i should grab a list of all scores from the listed endpoint and use them to fill remotePts in playerstate, this will function as checker for if score function appears to be wrong (i need to think if check exact value or not, might be fine for exact since js and pc use doubles both iirc), but if i tell user "hey this might be wrong" i should have note that it might be that the player got a new record
-				
-					currently playerstate has real and theoretical records, it also stores value for real and theoretical records, and it doesnt use api value yet, playerstate also has an overrides handler, and a ready bool, it has a func to load player info, and alternatively init an empty player (why cant this be 1 func with early return if id===0?)
-					tRecs (theoretical records) are real records with overrides applied to them
-					playerstate has funcs to init tRecs, add tRec, and remove tRec (actually replaces it with rRec), update theoretical points, and update points delta
-					
-					ok i need to uhm see how the interface gets updated
-					</pre>
+				<div class="selector-outer">
+					<span>API: </span>
+					<div id="api-selector" class="selector" data-default="pointercrate">
+						<input placeholder="Click to Select" type="search">
+						<ul>
+						</ul>
+					</div>
+					<button id="load-api">Set API</button>
 				</div>
-				
-				
-				
-				
-				
-				
-	
-	<div class="selector-outer">
-		<span>API: </span>
-		<div id="api-selector" class="selector" data-default="pointercrate">
-			<input placeholder="Click to Select" type="search">
-			<ul>
-			</ul>
-		</div>
-		<button id="load-api">Set API</button>
-	</div>
-	<br>			
-	<div class="selector-outer">
-		<span>Player: </span>
-		<div id="player-selector" class="selector" data-api-search="player">
-			<input placeholder="Click to Select" type="search">
-			<ul>
-			</ul>
-		</div>
-		<button id="load-player-records">Load records of player</button>
-	</div><br>
-	<div class="selector-outer">
-		<span>Formula: </span>
-		<div id="formula-selector" class="selector" data-default="Latest">
-			<input placeholder="Click to Select" type="search">
-			<ul>
-			</ul>
-		</div>
-		<button id="load-formula">Set Formula</button>
-	</div>
-	<br>
-	<div>
-		<span>Original Records:</span>
-		<ul id="og-record-list" class="records-list"></ul>
-	</div>
-	<div id="overrides-container" class="selector-outer">
-		<span>Demon: </span>
-		<div id="level-selector" class="selector">
-			<input placeholder="Click to Select">
-			<ul>
-			</ul>
-		</div>
-		<br>
-		<div>
-			<span>Progress:<span>
-			<input type="number" id="progress-input" min=0 max=100 placeholder="%">
-		</div>
-		<button id="add-override-button">Add Override</button>
-		<br>
-		<br>
-		<span>Overrides:</span>
-		<ul id="override-list" class="records-list"></ul>
-		<div id="overrides-result"></div>
-		<br>
-	</div>
-	
-	<!--todo: fix indentation lol -->
-	
-	
-	
-	
-	
-	
+				<br>			
+				<div class="selector-outer">
+					<span>Player: </span>
+					<div id="player-selector" class="selector" data-api-search="player">
+						<input placeholder="Click to Select" type="search">
+						<ul>
+						</ul>
+					</div>
+					<button id="load-player-records">Load records of player</button>
+				</div><br>
+				<div class="selector-outer">
+					<span>Formula: </span>
+					<div id="formula-selector" class="selector" data-default="Latest">
+						<input placeholder="Click to Select" type="search">
+						<ul>
+						</ul>
+					</div>
+					<button id="load-formula">Set Formula</button>
+				</div>
+				<br>
+				<div>
+					<span>Original Records:</span>
+					<ul id="og-record-list" class="records-list"></ul>
+				</div>
+				<div id="overrides-container" class="selector-outer">
+					<span>Demon: </span>
+					<div id="level-selector" class="selector">
+						<input placeholder="Click to Select">
+						<ul>
+						</ul>
+					</div>
+					<br>
+					<div>
+						<span>Progress:<span>
+						<input type="number" id="progress-input" min=0 max=100 placeholder="%">
+					</div>
+					<button id="add-override-button">Add Override</button>
+					<br>
+					<br>
+					<span>Overrides:</span>
+					<ul id="override-list" class="records-list"></ul>
+					<div id="overrides-result"></div>
+					<br>
+				</div>
 			</main>
 			<div class="mainSideDecoration"></div>
 		</div>
