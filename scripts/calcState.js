@@ -4,7 +4,7 @@
 			this.apis={
 				"pointercrate":{name:"Pointercrate"},
 				"insaneDemonList":{name:"Insane Demon List"},
-				"test":{name:"Test API"}
+				//"test":{name:"Test API"}
 			};
         }
     }
