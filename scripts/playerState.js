@@ -22,7 +22,7 @@ class PlayerState{
 		}
 
         loadPlayerInfo(){
-			this.playerPreLoad();
+			this.clearRRecList();
 			
             let thisRef=this;
 			let apiInstance=ApiInterface.getCurrentApiInstance();
@@ -30,43 +30,46 @@ class PlayerState{
 				thisRef.rRecs=records;
 				
 				//put real records
-				let rRecsList=document.getElementById("og-record-list");
-				for(let key in thisRef.rRecs){
-					let demID=Number(key);
-					let r=thisRef.rRecs[key];
-					let demon=apiInstance.getLevelByID(demID);
-					if(demon){
-						let item=document.createElement("span");
-						item.innerText=r.progress+"% on "+demon.name+", for "+round(apiInstance.score(demID,r.progress))+" pts";
-						rRecsList.appendChild(item);
-						rRecsList.appendChild(document.createElement("br"));
-					}
-					
-				}
+				thisRef.appendRRecList();
                 thisRef.playerPostLoad();
             });
         }
 		
 		initEmptyPlayer(){
-			this.playerPreLoad();
+			this.clearRRecList();
             let thisRef=this;
             thisRef.rRecs={};
 			this.playerPostLoad();
 			return Promise.resolve(); //temp hack so i can update override stuff after player loads (cuz i also need loadPlayerInfo handling so has 2 be promise)
 		}
 		
+		appendRRecList(){
+			let apiInstance=ApiInterface.getCurrentApiInstance();
+			let rRecsList=document.getElementById("og-record-list");
+			for(let key in this.rRecs){
+				let demID=Number(key);
+				let r=this.rRecs[key];
+				let demon=apiInstance.getLevelByID(demID);
+				if(demon){
+					let item=document.createElement("span");
+					item.innerText=r.progress+"% on "+demon.name+", for "+round(apiInstance.score(demID,r.progress))+" pts";
+					rRecsList.appendChild(item);
+					rRecsList.appendChild(document.createElement("br"));
+				}
+				
+			}
+		}
+		
 		//move common code in these 2 funcs cuz i hate code duping
-		playerPreLoad(){
+		clearRRecList(){
 			document.getElementById("og-record-list").innerHTML=""; //clear old
 		}
 		
 		playerPostLoad(){
             //calc real pts
-            let pts=getPtsFromArr(this.rRecs);
-            this.ptsLocal=pts;
+			this.updateRealPoints();
             this.initTRecs();
             this.updateTheoreticalPoints();
-            this.oHandler.updateOverridesList();
             this.ready=true;
 		}
 
@@ -92,8 +95,13 @@ class PlayerState{
             this.updateTheoreticalPoints();
         }
 
+        updateRealPoints(){
+            let pts=ApiInterface.getCurrentApiInstance().getPtsFromArr(this.rRecs);
+            this.ptsLocal=pts;
+        }
+
         updateTheoreticalPoints(){
-            let theoreticalPts=getPtsFromArr(this.tRecs);
+            let theoreticalPts=ApiInterface.getCurrentApiInstance().getPtsFromArr(this.tRecs);
             this.ptsTheoretical=theoreticalPts;
 			this.oHandler.updateOverridesList();
         }

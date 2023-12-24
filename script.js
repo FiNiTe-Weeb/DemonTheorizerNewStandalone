@@ -23,18 +23,6 @@
     }
 
     //DEFINE FUNCTIONS
-
-    /*
-    * @param arr - Array where keys are demonIDs, and values have "progress" property, which is integer percentage progress.
-    */
-    function getPtsFromArr(arr){
-        let pts=0;
-        for(let key in arr){
-            let r=arr[key];
-            pts+=ApiInterface.getCurrentApiInstance().score(key,r.progress);
-        }
-        return pts;
-    }
 	
 	function loadRecordsOfPlayer(evt){
 		evt.preventDefault();
@@ -156,11 +144,12 @@
 		}
 
         log.i("loading formula",formulaName);
-		ApiInterface.getCurrentApiInstance().currentFormula=formulaName;
-		calcState.currentPlayer.initPlayer().then(function(){
-			calcState.currentPlayer.updateTheoreticalPoints();
-			calcState.currentPlayer.oHandler.updateOverridesList();
-		});
+		ApiInterface.getCurrentApiInstance().currentFormula=formulaName;		
+		calcState.currentPlayer.clearRRecList();
+		calcState.currentPlayer.appendRRecList();
+		calcState.currentPlayer.updateRealPoints();
+		calcState.currentPlayer.updateTheoreticalPoints();
+		calcState.currentPlayer.oHandler.updateOverridesList();
 	}
 	
 	function loadApi(evt){

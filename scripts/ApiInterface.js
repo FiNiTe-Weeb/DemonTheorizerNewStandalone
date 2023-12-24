@@ -149,4 +149,17 @@ class ApiInterface{
 		log.w("score example method");
 		return exampleReturn;
 	}
+
+    /*
+    * @param arr - Array where keys are demonIDs, and values have "progress" property, which is integer percentage progress.
+    */
+	//overwrite if needed (e.g. to add score weighing)
+    getPtsFromArr(arr){
+        let pts=0;
+        for(let key in arr){
+            let r=arr[key];
+            pts+=ApiInterface.getCurrentApiInstance().score(key,r.progress);
+        }
+        return pts;
+    }
 }
