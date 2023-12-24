@@ -12,7 +12,12 @@ class ApiInsaneDemonList extends ApiInterface{
 	
 	init(){
 		let thisRef=this;
-		let levelPromise=fetch(this.endpoint+"?start=1").then(function(resp){return resp.json();}).then(function(data){
+		let levelPromise=fetch(this.endpoint+"?start=1").then(function(resp){
+			if(!resp.ok){
+				return Promise.reject(resp);
+			}
+			return resp.json();
+		}).then(function(data){
 			thisRef.levelData={};
 			thisRef.levelPositionToId={};
 			thisRef.levelIDtoIndex={};
@@ -32,7 +37,12 @@ class ApiInsaneDemonList extends ApiInterface{
 			}
 			
 		});
-		let playerPromise=fetch(this.endpoint+"leaderboard").then(function(resp){return resp.json();}).then(function(data){
+		let playerPromise=fetch(this.endpoint+"leaderboard").then(function(resp){
+			if(!resp.ok){
+				return Promise.reject(resp);
+			}
+			return resp.json();
+		}).then(function(data){
 			thisRef.playerData=data;
 		});
 		Promise.all([levelPromise,playerPromise]).then(function(){
@@ -63,7 +73,7 @@ class ApiInsaneDemonList extends ApiInterface{
 			}
 			thisRef.ready=true;
 			thisRef.callOnLoad();
-		});
+		}).catch(this.callOnFail);
 	}
 	
 	searchPlayer(name){

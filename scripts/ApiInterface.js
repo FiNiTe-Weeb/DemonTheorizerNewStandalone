@@ -42,9 +42,17 @@ class ApiInterface{
 		this.currentFormula="Latest"; //null for latest
 		this.formulas={"Latest":function(){log.e("formulas.latest method not implemented");}};
 		let thisRef=this;
-		this.initPromise=new Promise(function(res){
+		this.initPromise=new Promise(function(res,rej){
 			thisRef.callOnLoad=res;
+			thisRef.callOnFail=rej;
 		});
+		this.initPromise.catch(this.onInitError);
+	}
+	
+	onInitError(err){
+		alert("api initialization failed, see console for more details");
+		log.e("api initialization failed");
+		log.e(err);
 	}
 	
 	getLevelByID(levelID){

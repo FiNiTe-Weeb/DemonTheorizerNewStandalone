@@ -26,8 +26,9 @@ class ApiPointercrate extends ApiInterface{
 				thisRef.ready=true;
 				res(levelData);
 				thisRef.callOnLoad();
-			});
+			}).catch(rej);
 		});
+		levelsPromise.catch(this.callOnFail);
 	}
 	
 	
@@ -44,6 +45,9 @@ class ApiPointercrate extends ApiInterface{
 		let thisRef=this;
         let fetchPromise=new Promise(function(res,rej){//todo: handle error idk
             fetch(thisRef.endpoint+"v2/demons/listed?limit="+Math.min(pageLength,limit)+"&after="+(afterPage*pageLength)).then(function(resp){
+				if(!resp.ok){
+					return Promise.reject(resp);
+				}
                 return resp.json();
             }).then(function(data){
                 if(data.length>=pageLength&&limit>pageLength){//probably not last page
@@ -52,7 +56,7 @@ class ApiPointercrate extends ApiInterface{
                 }else{//last page
                     res(data);
                 }
-            });
+            }).catch(rej);
         });
         return fetchPromise;
     }
