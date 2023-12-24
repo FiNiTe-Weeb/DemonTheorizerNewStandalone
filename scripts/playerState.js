@@ -47,7 +47,7 @@ class PlayerState{
 			let apiInstance=ApiInterface.getCurrentApiInstance();
 			let rRecsList=document.getElementById("og-record-list");
 			for(let key in this.rRecs){
-				let demID=Number(key);
+				let demID=key;
 				let r=this.rRecs[key];
 				let demon=apiInstance.getLevelByID(demID);
 				if(demon){

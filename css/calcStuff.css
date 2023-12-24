@@ -131,3 +131,17 @@
 		.dark input,.dark button{
 			background:rgb(32,32,32);
 		}
+		[class^="note-"]{
+			display:none;
+		}
+		
+		/*does css have smth like a capture group so i dont have to copy-pasta??*/
+		[data-api="pointercrate"] .note-pointercrate{
+			display: initial;
+		}
+		[data-api="insaneDemonList"] .note-insaneDemonList{
+			display: initial;
+		}
+		[data-api="lowRefreshRateList"] .note-lowRefreshRateList{
+			display: initial;
+		}

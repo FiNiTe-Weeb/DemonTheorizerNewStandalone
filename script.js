@@ -14,6 +14,7 @@
 	
 	ApiInterface.registerApiInstance("pointercrate",new ApiPointercrate());
 	ApiInterface.registerApiInstance("insaneDemonList",new ApiInsaneDemonList());
+	ApiInterface.registerApiInstance("lowRefreshRateList",new ApiLowRefreshRateList());
 	ApiInterface.registerApiInstance("test",new ApiInterface());
 	ApiInterface.setCurrentApiInstance("pointercrate");
 	ApiInterface.getCurrentApiInstance().init();
@@ -74,6 +75,7 @@
 			addFormulaSelector();
 			addApiSelector();
 		});
+		document.querySelector("main").setAttribute("data-api",ApiInterface.currentApi); //for css stuff
 	}
 
     //pro tip: dont EVER user js to build a dom tree (unless u hate urself)
