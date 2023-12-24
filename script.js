@@ -63,6 +63,12 @@
 		for(let i=0;i<elementsToClear.length;i++){
 			elementsToClear[i].innerHTML="";
 		}
+		document.getElementById("level-selector").removeAttribute("data-id");
+		document.getElementById("player-selector").removeAttribute("data-id");
+		document.getElementById("formula-selector").removeAttribute("data-id");
+		document.querySelector("#level-selector input").value="";
+		document.querySelector("#player-selector input").value="";
+		document.querySelector("#formula-selector input").value="";
         ApiInterface.getCurrentApiInstance().initPromise.then(function(){
 			addOverridesBox();
 			addFormulaSelector();
