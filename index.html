@@ -12,6 +12,27 @@
 	<meta content="https://list-calc.finite-weeb.xyz/images/finiteThinkV3_icon_alt_512.png" property="og:image" />
 </head>
 <body>
+	<div id="aboutContainer" hidden>
+		<div id="aboutContent" class="background">
+		<h>About me:</h>
+		<p>Hi! I'm FiNiTe/FiNiTe_weeb, I'm a GD player, I used to have list points, though not sure if I will have them again......</p>
+		<p>Linktree: <a href="https://linktr.ee/finite_weeb" target="_blank">https://linktr.ee/finite_weeb</a></p>
+		<p>Fun fact, im listening to creo - carnivores as im writing this</p>
+		<br>
+		<h>About this site:</h>
+		<p>At some point I was curious about calculating points, and saw that some others were too, so I decided I want to make a list point calculator, originally, it was a userscript (found at <a href="https://github.com/FiNiTe-Weeb/DemonTheorizer" target="_blank">https://github.com/FiNiTe-Weeb/DemonTheorizer</a>) which would show a calculator on the pointercrate stats viewer, eventually, I decided to move it to a site, which made using it for new people alot easier, as they didn't need to figure out how to get Tampermonkey, or another userscript manager, and then actually figure out how to install the script. At first I didn't have a domain so I just put it on <a href="https://sites.google.com/view/finites-demon-theorizer/home" target="_blank">https://sites.google.com/view/finites-demon-theorizer/home</a> (the code for this is also in the previously linked github repo)</p>
+		
+		<p>Some time later I got a domain cuz I thought it would be cool, and figured I may aswell put the list calc here, and also maybe put more effort into it, and that's how this site came to be, it's current extras over the google-sites site are: better styling, a dark mode (top-right if u didn't notice), an about page (hi), fixes for the dropdown selector stuff, some random bug fixes, and also support for more than just the Pointercrate list.</p>
+		
+		<h>Other Info:</h>
+		<p>For anyone curious, this site is a Cloudflare static site, meaning I get free hosting lol, if for whatever reason I forget to pay the domain renewall stuff, this site should still be available at: <a href="https://finite-list-calc.pages.dev" target="_blank">https://finite-list-calc.pages.dev</a>.</p>
+		<br>The domain was bought on namecheap for like 20 eur for 3 years (first year has a big discount so on average its abit under 10eur per year long-term).
+		<br>GitHub repo for this site: <a href="https://github.com/FiNiTe-Weeb/DemonTheorizerNewStandalone" target="_blank">https://github.com/FiNiTe-Weeb/DemonTheorizerNewStandalone</a>
+		<br>If you wanna run a copy or derivative of this site, all I ask is that you credit me, and clearly link back to the original site.</p>
+		<br>
+		<p>The character in the header background is Momiji Inubashiri from Touhou Project, drawn by me. The GD level shown in the header is my completion of Bausha Vortex by Pennutoh at 50%.</p>
+		</div>
+	</div>
 	<div id="darkModeToggle" class="background">
 		Toggle<br>dark mode
 	</div>
@@ -102,6 +123,14 @@
 					<div class="footerItemLabel">My Discord server (dead af)</div>
 				</div>
 			</a>
+			<div onclick="aboutOpen()" class="footerItem">
+				<div class="smallImgContainer">
+					<img class="smallImg weebLogo">
+				</div>
+				<div class="footerItemLabelContainer">
+					<div class="footerItemLabel">About this site</div>
+				</div>
+			</div>
 		</div>
 	</footer>
 	
@@ -145,6 +174,23 @@
 		if(getCookie("darkmode")=="true"){
 			toggleDark();
 		}
+		
+		function aboutOpen(){
+			document.getElementById("aboutContainer").hidden=false;
+			document.body.style.overflowY="hidden";
+		}
+		
+		function aboutClose(){
+			document.getElementById("aboutContainer").hidden=true;
+			document.body.style.overflowY="";
+		}
+		
+		document.getElementById("aboutContainer").addEventListener("click",function(evt){
+			if(evt.target.id=="aboutContainer"){aboutClose();}
+		});
+		document.addEventListener("keyup",function(evt){
+			if(evt.key=="Escape"){aboutClose();}
+		});
 	</script>
 	
 	<script type="text/javascript" src="scripts/logger.js"></script>

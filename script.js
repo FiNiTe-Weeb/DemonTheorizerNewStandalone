@@ -16,7 +16,7 @@
 	ApiInterface.registerApiInstance("insaneDemonList",new ApiInsaneDemonList());
 	ApiInterface.registerApiInstance("lowRefreshRateList",new ApiLowRefreshRateList());
 	ApiInterface.registerApiInstance("test",new ApiInterface());
-	ApiInterface.setCurrentApiInstance("pointercrate");
+	ApiInterface.setCurrentApiInstance("test");
 	ApiInterface.getCurrentApiInstance().init();
 
     let calcState=new CalcState();
