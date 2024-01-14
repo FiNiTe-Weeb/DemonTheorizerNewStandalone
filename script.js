@@ -8,7 +8,6 @@
     //DEFINE VARS/CONSTS
 
     const TEST=true;
-    const LIMIT_DEMONS_NUMBER=150;
 
     let log=new Logger();
 	
