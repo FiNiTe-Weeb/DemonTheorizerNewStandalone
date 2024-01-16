@@ -165,10 +165,11 @@ class ApiInterface{
 
     /*
     * @param score - Get estimated rank for el score
+    * @param playerID - Know what playerID to remove when checking other scores
 	* @return -2 if not implemented, -1 on err, else rank estimate
     */
 	//OVERWRITE
-    getRankEstimate(score){
+    getRankEstimate(score,playerID){
         return -2;
     }
 }

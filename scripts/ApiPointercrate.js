@@ -4,7 +4,7 @@ class ApiPointercrate extends ApiInterface{
 		this.pageSize=pageSize;
 		this.totalSize=totalSize;
 		this.maxRankingForProgress=maxRankingForProgress;
-		this.scoreCacheEndpoint="https://cf-worker.finite-weeb.xyz/rankcache/pointercrate/score";
+		this.scoreCacheEndpoint="https://cf-worker.finite-weeb.xyz/rankcache/pointercrate/leaderboard";
 		this.scoreCache=null;
 		this.formulas={
 			"Latest":this.pointsFormula,
@@ -149,11 +149,22 @@ class ApiPointercrate extends ApiInterface{
     * @param score - Get estimated rank for el score
 	* @return -2 if not implemented, -1 on err, else rank estimate
     */
-    getRankEstimate(score){
+    getRankEstimate(score,playerID=0){
+		let actualRank=Infinity;
+		if(playerID!=0){
+			for(let i=0;i<this.scoreCache.length;i++){
+				if(playerID==this.scoreCache[i].id){
+					actualRank=this.scoreCache[i].rank;
+					break;
+				}
+			}
+		}
 		if(this.scoreCache!=null){
 			for(let i=0;i<this.scoreCache.length;i++){
-				if(score>=this.scoreCache[i]){
-					return i+1;
+				if(score>=this.scoreCache[i].score){
+					let rank=i+1;
+					if(actualRank<rank){rank--;} //if their real rank is above (smaller) their theoretical rank, we remove 1 from the rank to account for the fact there should be 1 less spot taken
+					return rank;
 				}
 			}
 		}
