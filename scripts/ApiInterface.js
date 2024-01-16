@@ -162,4 +162,13 @@ class ApiInterface{
         }
         return pts;
     }
+
+    /*
+    * @param score - Get estimated rank for el score
+	* @return -2 if not implemented, -1 on err, else rank estimate
+    */
+	//OVERWRITE
+    getRankEstimate(score){
+        return -2;
+    }
 }

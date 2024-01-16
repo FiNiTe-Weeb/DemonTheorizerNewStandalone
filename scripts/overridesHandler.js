@@ -78,7 +78,22 @@ class OverridesHandler{
                     resultEl.style.borderColor="rgba(255,0,0,1)";
                 break;
             }
-            resultEl.innerText="Theoretical pts: "+round(this.player.ptsTheoretical)+", real pts: "+round(this.player.ptsLocal)+", resulting in a difference of "+(diff>0?"+":"")+round(diff)+" pts.";
+			let apiInstance=ApiInterface.getCurrentApiInstance();
+			let rankEstStr="N/A";
+			if(apiInstance.ready){
+				let rankEstimate=apiInstance.getRankEstimate(round(this.player.ptsTheoretical));
+				switch(rankEstimate){
+					case -2:
+						rankEstStr="Not Implemented";
+					break;
+					case -1:
+						rankEstStr="Err";
+					break;
+					default:
+						rankEstStr=rankEstimate;
+				}
+			}
+            resultEl.innerText="Theoretical pts: "+round(this.player.ptsTheoretical)+", real pts: "+round(this.player.ptsLocal)+", resulting in a difference of "+(diff>0?"+":"")+round(diff)+" pts. "+"Rank estimate: "+rankEstStr;
         }
 		
 		addOverrideHTML(demID,progress){

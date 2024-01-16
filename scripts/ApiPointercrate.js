@@ -4,6 +4,8 @@ class ApiPointercrate extends ApiInterface{
 		this.pageSize=pageSize;
 		this.totalSize=totalSize;
 		this.maxRankingForProgress=maxRankingForProgress;
+		this.scoreCacheEndpoint="https://cf-worker.finite-weeb.xyz/rankcache/pointercrate/score";
+		this.scoreCache=null;
 		this.formulas={
 			"Latest":this.pointsFormula,
 			"Pre 2022/06/13 update":this.pointsFormulaPre2022_06_13
@@ -23,10 +25,26 @@ class ApiPointercrate extends ApiInterface{
 					thisRef.levelPositionToId[item.position]=item.id;
 					thisRef.levelIDtoIndex[item.id]=key;
 				}
-				thisRef.ready=true;
 				res(levelData);
-				thisRef.callOnLoad();
 			}).catch(rej);
+		});
+		//i want scoreCachePromise to resolve even on err so it doesnt prevent promise.all from going
+		let scoreCachePromise=new Promise(function(res,rej){
+			fetch(thisRef.scoreCacheEndpoint).then(function(resp){return resp.json();}).then(function(data){
+				if(data.status&&data.status>=400){
+					return Promise.reject(data);
+				}
+				thisRef.scoreCache=data;
+				res(data);
+			}).catch(function(err){
+				alert("Failed to load scoreCache, rank estimate will not work, check console for more details, err msg: "+err.message);
+				log.e(err);
+				res(null);
+			});
+		});
+		Promise.all([levelsPromise,scoreCachePromise]).then(function(){
+			thisRef.ready=true;
+			thisRef.callOnLoad();
 		});
 		levelsPromise.catch(this.callOnFail);
 	}
@@ -126,6 +144,22 @@ class ApiPointercrate extends ApiInterface{
         }
         return this.formulas[this.currentFormula](level.position,progress,level.requirement);
 	}
+
+    /*
+    * @param score - Get estimated rank for el score
+	* @return -2 if not implemented, -1 on err, else rank estimate
+    */
+    getRankEstimate(score){
+		if(this.scoreCache!=null){
+			for(let i=0;i<this.scoreCache.length;i++){
+				if(score>=this.scoreCache[i]){
+					return i+1;
+				}
+			}
+		}
+		return -1;
+		
+    }
 	
 	/*
     * points formula
