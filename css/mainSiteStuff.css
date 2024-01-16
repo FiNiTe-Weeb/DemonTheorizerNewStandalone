@@ -220,7 +220,8 @@
 		}
 		
 		#aboutContent{
-			margin:80px;
+			/*0px min, 80px max, 2nd param is a mapping which outputs 0px when 100% is 400 pixels, and outputs 80px when 100% is 600 pixels (200 pixels more)*/
+			margin:clamp(0px,((100% - 400px)/200)*80,80px);
 			padding:16px;
 			border-width:2px;
 			border-color:#BFBFBF;

@@ -175,14 +175,20 @@
 			toggleDark();
 		}
 		
-		function aboutOpen(){
+		function aboutOpen(pushState=true){
 			document.getElementById("aboutContainer").hidden=false;
 			document.body.style.overflowY="hidden";
+			if(pushState){
+				history.pushState({about:true},"");
+			}
 		}
 		
-		function aboutClose(){
+		function aboutClose(goBack=true){
 			document.getElementById("aboutContainer").hidden=true;
 			document.body.style.overflowY="";
+			if(goBack){
+				history.back();
+			}
 		}
 		
 		document.getElementById("aboutContainer").addEventListener("click",function(evt){
@@ -190,6 +196,18 @@
 		});
 		document.addEventListener("keyup",function(evt){
 			if(evt.key=="Escape"){aboutClose();}
+		});
+		window.addEventListener("popstate",function(evt){
+			if(evt.state!=null&&evt.state.about){
+				aboutOpen(false);
+			}else{
+				aboutClose(false);
+			}
+		});
+		window.addEventListener("load",function(evt){
+			if(history.state!=null&&history.state.about){
+				aboutOpen(false);
+			}
 		});
 	</script>
 	
