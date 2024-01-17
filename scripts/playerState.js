@@ -26,7 +26,8 @@ class PlayerState{
 			
             let thisRef=this;
 			let apiInstance=ApiInterface.getCurrentApiInstance();
-			return apiInstance.getPlayerRecords(this.id).then(function(records){
+			return apiInstance.getPlayerData(this.id).then(function(playerData){
+				let records=apiInstance.getPlayerRecords(playerData);
 				thisRef.rRecs=records;
 				
 				//put real records

@@ -120,7 +120,7 @@ class ApiInterface{
 	}
 	
 	//OVERWRITE
-	getPlayerRecords(playerID,forceUpdate){
+	getPlayerRecords(playerData){
 		log.w("getPlayerRecords example method");
 		return this.getPlayerData(playerID,forceUpdate).then(function(data){
             let records={};

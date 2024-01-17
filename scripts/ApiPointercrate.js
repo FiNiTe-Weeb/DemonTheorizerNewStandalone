@@ -101,30 +101,27 @@ class ApiPointercrate extends ApiInterface{
 		return promise;
 	}
 	
-	getPlayerRecords(playerID,forceUpdate=false){
-		let thisRef=this;
-		return this.getPlayerData(playerID,forceUpdate).then(function(data){
-            let records={};
-			
-			//put non-verifications from api response in player records list
-            let unsortedRecords=data.records;
-            for(let i=0;i<unsortedRecords.length;i++){
-                let item=unsortedRecords[i];
-                if(!(item.demon.position>thisRef.totalSize)){
-                    records[item.demon.id]={progress:item.progress};
-                }
+	getPlayerRecords(playerData){
+        let records={};
+		
+		//put non-verifications from api response in player records list
+        let unsortedRecords=playerData.records;
+        for(let i=0;i<unsortedRecords.length;i++){
+            let item=unsortedRecords[i];
+            if(!(item.demon.position>this.totalSize)){
+                records[item.demon.id]={progress:item.progress};
             }
-			
-			//put verifications from api response in player records list
-            let verifiedRecords=data.verified;
-            for(let i=0;i<verifiedRecords.length;i++){
-                let item=verifiedRecords[i];
-                if(!(item.position>thisRef.totalSize)){
-                    records[item.id]={progress:100};
-                }
+        }
+		
+		//put verifications from api response in player records list
+        let verifiedRecords=playerData.verified;
+        for(let i=0;i<verifiedRecords.length;i++){
+            let item=verifiedRecords[i];
+            if(!(item.position>this.totalSize)){
+                records[item.id]={progress:100};
             }
-			return records;
-		});
+        }
+		return records;
 	}
 	
 	score(levelID,progress){

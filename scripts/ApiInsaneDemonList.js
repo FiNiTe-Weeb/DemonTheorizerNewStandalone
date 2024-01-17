@@ -103,10 +103,8 @@ class ApiInsaneDemonList extends ApiInterface{
 		});
 	}
 	
-	getPlayerRecords(playerID,forceUpdate){
-		return this.getPlayerData(playerID,forceUpdate).then(function(data){
-			return data.records;
-		});
+	getPlayerRecords(playerData){
+		return playerData.records;
 	}
 
     /*
