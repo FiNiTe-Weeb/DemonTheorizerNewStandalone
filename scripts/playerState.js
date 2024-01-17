@@ -3,6 +3,7 @@ class PlayerState{
             this.id=id; //id is integer
             this.rRecs=null; //rRecs is real records, tRecs is theoretical records
             this.tRecs=null; //both rRecs and tRecs are null at first, when initialized, they are object where key is demonID, and value is record info todo: update desc
+			this.name=null;
             this.ptsLocal=0;//real pts calculated by this script
             this.ptsTheoretical=0;//theoretical pts calculated by this script
             this.ptsRemote=null;//unused until api outputs it, todo: ask sta to add it so i can check if my script is working properly in realtime
@@ -28,6 +29,7 @@ class PlayerState{
 			let apiInstance=ApiInterface.getCurrentApiInstance();
 			return apiInstance.getPlayerData(this.id).then(function(playerData){
 				let records=apiInstance.getPlayerRecords(playerData);
+				thisRef.name=playerData.name;
 				thisRef.rRecs=records;
 				
 				//put real records
@@ -40,6 +42,7 @@ class PlayerState{
 			this.clearRRecList();
             let thisRef=this;
             thisRef.rRecs={};
+			thisRef.name="Empty Player";
 			this.playerPostLoad();
 			return Promise.resolve(); //temp hack so i can update override stuff after player loads (cuz i also need loadPlayerInfo handling so has 2 be promise)
 		}
@@ -72,7 +75,7 @@ class PlayerState{
             this.initTRecs();
             this.updateTheoreticalPoints();
             this.ready=true;
-			document.getElementById("current-player").innerText="Current PlayerID: "+this.id;
+			document.getElementById("current-player").innerText="Current Player: "+this.name;
 		}
 
         initTRecs(){
