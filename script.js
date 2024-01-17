@@ -15,7 +15,11 @@
 	ApiInterface.registerApiInstance("insaneDemonList",new ApiInsaneDemonList());
 	ApiInterface.registerApiInstance("lowRefreshRateList",new ApiLowRefreshRateList());
 	ApiInterface.registerApiInstance("test",new ApiInterface());
-	ApiInterface.setCurrentApiInstance("pointercrate");
+	let startApi="pointercrate";
+	ApiInterface.setCurrentApiInstance(startApi);
+    window.addEventListener('load', function(){
+		loadApi(startApi);
+	});
 	ApiInterface.getCurrentApiInstance().init();
 
     let calcState=new CalcState();
@@ -33,6 +37,7 @@
         let playerID=selector.getAttribute("data-id");
 
         log.i("loading records for playerID",playerID);
+		document.getElementById("current-player").innerText+=", Loading playerID: "+playerID; //text updated after load in playerstate playerPostLoad
         if(playerID==calcState.currentPlayer.id){return;} //return if player already selected
         if((playerID==null)||(playerID==0)){return;} //return if playerID invalid (non-type-specific compare to 0 is intentional)
 
@@ -43,21 +48,24 @@
 
     //Start it all
     log.i("uwu");
-    window.addEventListener('load', loadCalc);
-    function loadCalc(){
+    window.addEventListener('load', initSelectors);
+	
+	function initSelectors(){
 		SelectorsHelper.init();
-		loadApiSpecific();
-		calcState.currentPlayer=new PlayerState(0);
-        
         let loadRecordsBtn=document.getElementById("load-player-records");
 		loadRecordsBtn.addEventListener("click",loadRecordsOfPlayer);
         let loadFormulaBtn=document.getElementById("load-formula");
-		loadFormulaBtn.addEventListener("click",loadFormula);
+		loadFormulaBtn.addEventListener("click",loadFormulaButtonCallback);
         let loadApiBtn=document.getElementById("load-api");
-		loadApiBtn.addEventListener("click",loadApi);
+		loadApiBtn.addEventListener("click",loadApiButtonCallback);
+	}
+	
+    function loadCalc(){
+		loadApiSpecific();
     }
 	
 	function loadApiSpecific(){
+		calcState.currentPlayer=new PlayerState(0);
 		//clear anything that might be set already
 		let elementsToClear=document.querySelectorAll(".selector ul");
 		for(let i=0;i<elementsToClear.length;i++){
@@ -73,6 +81,8 @@
 			addOverridesBox();
 			addFormulaSelector();
 			addApiSelector();
+			document.getElementById("current-api").innerText="Currently loaded API: "+calcState.apis[ApiInterface.currentApi].name;
+			setFormula(ApiInterface.getCurrentApiInstance().currentFormula); //this is mostly here to set thecurrent formula text lul
 		});
 		document.querySelector("main").setAttribute("data-api",ApiInterface.currentApi); //for css stuff
 	}
@@ -141,18 +151,22 @@
 		onOptionsListUpdate(SelectorsHelper.findDataFromElement(apiSelector));
 	}
 	
-	function loadFormula(evt){
+	function loadFormulaButtonCallback(evt){
         log.i(evt);
-		let selector=document.getElementById("formula-selector");
+		let selector=document.getElementById("formula-selector")
         let formulaName=selector.getAttribute("data-id");
-		
+		setFormula(formulaName);
+	}
+	
+	function setFormula(formulaName){
 		if(formulaName==null||(!ApiInterface.getCurrentApiInstance().formulas[formulaName])){
 			log.e("no formula "+formulaName);
 			return;
 		}
 
-        log.i("loading formula",formulaName);
-		ApiInterface.getCurrentApiInstance().currentFormula=formulaName;		
+        log.i("setting formula",formulaName);
+		ApiInterface.getCurrentApiInstance().currentFormula=formulaName;
+		document.getElementById("current-formula").innerText="Current Formula: "+formulaName;
 		calcState.currentPlayer.clearRRecList();
 		calcState.currentPlayer.appendRRecList();
 		calcState.currentPlayer.updateRealPoints();
@@ -160,11 +174,14 @@
 		calcState.currentPlayer.oHandler.updateOverridesList();
 	}
 	
-	function loadApi(evt){
+	function loadApiButtonCallback(evt){
         log.i(evt);
 		let selector=document.getElementById("api-selector");
         let apiID=selector.getAttribute("data-id");
-		
+		loadApi(apiID);
+	}
+	
+	function loadApi(apiID){
 		if(apiID==null||(!ApiInterface.apiInstances[apiID])){
 			log.e("no API "+apiID);
 			return;
@@ -173,6 +190,7 @@
         log.i("loading API",apiID);
 		
 		ApiInterface.setCurrentApiInstance(apiID);
+		document.getElementById("current-api").innerText+=", Loading "+calcState.apis[ApiInterface.currentApi].name;
 		let apiInstance=ApiInterface.getCurrentApiInstance();
 		if(!apiInstance.ready){
 			apiInstance.init();

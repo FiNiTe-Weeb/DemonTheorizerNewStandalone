@@ -71,6 +71,7 @@ class PlayerState{
             this.initTRecs();
             this.updateTheoreticalPoints();
             this.ready=true;
+			document.getElementById("current-player").innerText="Current PlayerID: "+this.id;
 		}
 
         initTRecs(){
