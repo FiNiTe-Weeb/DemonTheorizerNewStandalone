@@ -172,4 +172,23 @@ class ApiInterface{
     getRankEstimate(score,playerID){
         return -2;
     }
+
+    /*
+	* @return -2 if not implemented, -1 on err, else max pts
+    */
+    getMaxPts(){
+		let recs={};
+		for(let lvlID in this.levelIDtoIndex){
+			recs[lvlID]={progress:100};
+		}
+        return this.getPtsFromArr(recs);
+    }
+
+    /*
+	* @return -2 if not implemented, -1 on err, else number of ppl with >0 score
+    */
+	//overwrite if needed
+    getNumberOfScoreHavers(){
+        return this.getRankEstimate(0,0)-1;
+    }
 }

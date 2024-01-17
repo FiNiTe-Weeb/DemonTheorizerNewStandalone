@@ -78,11 +78,15 @@
 		document.querySelector("#player-selector input").value="";
 		document.querySelector("#formula-selector input").value="";
         ApiInterface.getCurrentApiInstance().initPromise.then(function(){
+			let apiInstance=ApiInterface.getCurrentApiInstance();
 			addOverridesBox();
 			addFormulaSelector();
 			addApiSelector();
-			document.getElementById("current-api").innerText="Currently loaded API: "+calcState.apis[ApiInterface.currentApi].name;
-			setFormula(ApiInterface.getCurrentApiInstance().currentFormula); //this is mostly here to set thecurrent formula text lul
+			let currentApiStr="Currently loaded API: "+calcState.apis[ApiInterface.currentApi].name;
+			currentApiStr+=", Max pts: "+round(apiInstance.getMaxPts());
+			currentApiStr+=", People with points>0: "+apiInstance.getNumberOfScoreHavers();
+			document.getElementById("current-api").innerText=currentApiStr;
+			setFormula(apiInstance.currentFormula); //this is mostly here to set thecurrent formula text lul
 		});
 		document.querySelector("main").setAttribute("data-api",ApiInterface.currentApi); //for css stuff
 	}
