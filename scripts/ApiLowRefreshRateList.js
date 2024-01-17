@@ -96,7 +96,7 @@ class ApiLowRefreshRateList extends ApiInterface{
 		return new Promise(function(res){
 			name=name.toLowerCase();
 			let foundPlayers=[];
-			for(let i=0;i<thisRef.sortedPlayerKeys.length;i++){
+			for(let i=0;i<thisRef.sortedPlayerKeys.length;i++){ //we want results to appear sorted so we loop this array
 				let item=thisRef.playerData[thisRef.sortedPlayerKeys[i]];
 				if(item.name.toLowerCase().indexOf(name)>=0){
 					foundPlayers.push(item);
@@ -123,6 +123,33 @@ class ApiLowRefreshRateList extends ApiInterface{
 			return data.records;
 		});
 	}
+
+    /*
+    * @param score - Get estimated rank for el score
+	* @return -2 if not implemented, -1 on err, else rank estimate
+    */
+    getRankEstimate(score,playerID=0){
+		let actualRank=Infinity;
+		if(playerID!=0){
+			for(let playerKey in this.playerData){
+				if(playerID==this.playerData[playerKey].id){
+					actualRank=this.playerData[playerKey].rank;
+					break;
+				}
+			}
+		}
+		if(this.playerData!=null){
+			for(let i=0;i<this.sortedPlayerKeys.length;i++){ //we need to go thru sorted arr so as soon as score reaches low enough we hit target rank
+				if(score>=this.playerData[this.sortedPlayerKeys[i]].score){
+					let rank=i+1;
+					if(actualRank<rank){rank--;} //if their real rank is above (smaller) their theoretical rank, we remove 1 from the rank to account for the fact there should be 1 less spot taken
+					return rank;
+				}
+			}
+		}
+		return -1;
+		
+    }
 
     /*
     * calc points for a given demon id and percentage
