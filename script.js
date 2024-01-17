@@ -86,7 +86,7 @@
 			currentApiStr+=", Max pts: "+round(apiInstance.getMaxPts());
 			currentApiStr+=", People with points>0: "+apiInstance.getNumberOfScoreHavers();
 			document.getElementById("current-api").innerText=currentApiStr;
-			setFormula(apiInstance.currentFormula); //this is mostly here to set thecurrent formula text lul
+			setFormula(apiInstance.currentFormula); //this is mostly here to set the current formula text lul
 		});
 		document.querySelector("main").setAttribute("data-api",ApiInterface.currentApi); //for css stuff
 	}
