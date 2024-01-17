@@ -81,7 +81,7 @@ class OverridesHandler{
 			let apiInstance=ApiInterface.getCurrentApiInstance();
 			let rankEstStr="N/A";
 			if(apiInstance.ready){
-				let rankEstimate=apiInstance.getRankEstimate(round(this.player.ptsTheoretical),this.player.id);
+				let rankEstimate=apiInstance.getRankEstimate(this.player.ptsTheoretical,this.player.id);
 				switch(rankEstimate){
 					case -2:
 						rankEstStr="Not Implemented";
