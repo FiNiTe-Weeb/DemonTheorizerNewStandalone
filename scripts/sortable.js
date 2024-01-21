@@ -30,13 +30,20 @@ class Sortable{
 		this.ascending=null;
 	}
 	
-	getSortedData(newKey=null){
+	getSortedData(newKey=null,newAscending=null){
 		if(newKey!=null){
 			if(this.sortKeys.indexOf(newKey)<0){
 				log.e("Sortable tried to set invalid key: "+newKey+", sortable: ",this);
 				return null;
 			}
 			this.currentKey=newKey;
+		}
+		if(newAscending!=null){
+			if(newAscending!==true&&newAscending!==false){
+				log.e("Sortable tried to set invalid newAscending: "+newAscending+", should be boolean, sortable: ",this);
+				return null;
+			}
+			this.ascending=newAscending;
 		}
 		if(!this.data||!this.sortKeys||this.currentKey==null||this.currentKey==undefined||this.ascending==null||this.ascending==undefined){
 			log.i("Sortable tried to sort with unset properties, sortable: ",this);
@@ -58,8 +65,8 @@ class Sortable{
 		return dataToSort;
 	}
 	
-	refreshOutput(newKey=null){
-		let sortedData=this.getSortedData(newKey);
+	refreshOutput(newKey=null,newAscending=null){
+		let sortedData=this.getSortedData(newKey,newAscending);
 		let el=this.sortableEl;
 		el.innerHTML="";
 		if(sortedData==null){

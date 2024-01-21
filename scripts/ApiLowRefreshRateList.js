@@ -167,6 +167,30 @@ class ApiLowRefreshRateList extends ApiInterface{
 		}
         return this.formulas[this.currentFormula](level.position,progress,req);
 	}
+
+    /*
+    * @param recs - records array, key is levelID, each item has property "progress"
+	* returns smth like:
+	{
+		sortKeys:["sortableKey1"],
+		data:{
+			whateverKeyUWant:{sortableKey1:sortableValue1}}
+		}
+	}
+    */
+	//overwrite if needed
+	getSortingDataForRecords(recs){
+		let sortedRecordInfo=this.getSortedRecordInfoByPointsDescending(recs);
+		for(let i=0;i<sortedRecordInfo.length;i++){
+			let item=sortedRecordInfo[i];
+			let levelInfo=this.getLevelByID(item.levelID);
+			item.html="#"+(i+1)+": "+item.progress+"% on #"+levelInfo.position+": "+levelInfo.name+", for "+round(item.unweightedPoints)+"pts ("+round(item.weightedPoints)+"pts)"
+		}
+		return {
+			sortKeys:["unweightedPoints"/*,"weightedPoints"*/,"position","levelID"],
+			data:sortedRecordInfo
+		};
+	}
 	
 	/*
     * points formula copied from pointercrate
@@ -205,18 +229,19 @@ class ApiLowRefreshRateList extends ApiInterface{
             recsArr.push({
 				levelID:key,
 				progress:r.progress,
-				unweightedScore:this.score(key,r.progress)
+				unweightedPoints:this.score(key,r.progress),
+				position:this.getLevelByID(key).position
 			});
         }
 		recsArr.sort(function(a,b){
-			return b.unweightedScore-a.unweightedScore;
+			return b.unweightedPoints-a.unweightedPoints;
 		});
 		
 		//anything using this is likely interested in weighted points too:
 		for(let i=0;i<recsArr.length;i++){
 			let item=recsArr[i];
-			let weightedScore=item.unweightedScore*Math.pow(0.95,i)
-			item.weightedScore=weightedScore;
+			let weightedPoints=item.unweightedPoints*Math.pow(0.95,i)
+			item.weightedPoints=weightedPoints;
 		}
 		return recsArr;
 	}
@@ -229,7 +254,7 @@ class ApiLowRefreshRateList extends ApiInterface{
 		let sortedRecsInfo=this.getSortedRecordInfoByPointsDescending(recs);
 		let pts=0;
 		for(let i=0;i<sortedRecsInfo.length;i++){
-			pts+=sortedRecsInfo[i].weightedScore; //osu reference
+			pts+=sortedRecsInfo[i].weightedPoints; //osu reference
 		}
         return pts;
     }

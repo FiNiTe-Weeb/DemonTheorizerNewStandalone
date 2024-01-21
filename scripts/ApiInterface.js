@@ -156,7 +156,7 @@ class ApiInterface{
 	{
 		sortKeys:["sortableKey1"],
 		data:{
-			whateverKeyUWant:{sortableKey1:sortableValue1}}
+			whateverKeyUWant:{sortableKey1:sortableValue1}} //first sort key is default one
 		}
 	}
     */
@@ -171,11 +171,17 @@ class ApiInterface{
 				levelID:key,
 				position:levelInfo.position,
 				points:points,
-				html:item.progress+"% on "+levelInfo.name+", for "+round(points)+"pts"
-			})
+				html:item.progress+"% on #"+levelInfo.position+": "+levelInfo.name+", for "+round(points)+"pts"
+			});
+		}
+		recordsInfo.sort(function(a,b){
+			return b.points-a.points;
+		});
+		for(let i=0;i<recordsInfo.length;i++){
+			recordsInfo[i].html="#"+(i+1)+": "+recordsInfo[i].html; //add pb rank
 		}
 		return {
-			sortKeys:["levelID","position","points"],
+			sortKeys:["points","position","levelID"],
 			data:recordsInfo
 		};
 	}
