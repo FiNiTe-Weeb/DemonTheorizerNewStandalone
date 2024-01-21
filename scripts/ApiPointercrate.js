@@ -1,5 +1,5 @@
 class ApiPointercrate extends ApiInterface{
-	constructor(apiEndpoint="https://pointercrate.com/api/",pageSize=75,totalSize=150,maxRankingForProgress=75){
+	constructor(apiEndpoint="https://asdpointercrate.com/api/",pageSize=75,totalSize=150,maxRankingForProgress=75){
 		super(apiEndpoint);
 		this.pageSize=pageSize;
 		this.totalSize=totalSize;

@@ -177,6 +177,9 @@ class ApiInterface{
 	* @return -2 if not implemented, -1 on err, else max pts
     */
     getMaxPts(){
+		if(this.levelIDtoIndex==null){
+			return -1;
+		}
 		let recs={};
 		for(let lvlID in this.levelIDtoIndex){
 			recs[lvlID]={progress:100};
@@ -189,6 +192,10 @@ class ApiInterface{
     */
 	//overwrite if needed
     getNumberOfScoreHavers(){
-        return this.getRankEstimate(0,0)-1;
+		let rankEstimate=this.getRankEstimate(0,0)
+		if(rankEstimate>=0){
+			rankEstimate-=1;
+		}
+        return rankEstimate;
     }
 }

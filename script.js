@@ -74,13 +74,14 @@
 		document.querySelector("#player-selector input").value="";
 		document.querySelector("#formula-selector input").value="";
         ApiInterface.getCurrentApiInstance().initPromise.then(function(){
-			let apiInstance=ApiInterface.getCurrentApiInstance();
 			addOverridesBox();
+		}).finally(function(){
 			addFormulaSelector();
 			addApiSelector();
+			let apiInstance=ApiInterface.getCurrentApiInstance();
 			let currentApiStr="Currently loaded API: "+calcState.apis[ApiInterface.currentApi].name;
-			currentApiStr+=", Max pts: "+round(apiInstance.getMaxPts());
-			currentApiStr+=", People with points>0: "+apiInstance.getNumberOfScoreHavers();
+			currentApiStr+=", Max pts: "+msgIfErrValue(round(apiInstance.getMaxPts()));
+			currentApiStr+=", People with points>0: "+msgIfErrValue(apiInstance.getNumberOfScoreHavers());
 			document.getElementById("current-api").innerText=currentApiStr;
 			setFormula(apiInstance.currentFormula); //this is mostly here to set the current formula text lul
 		});
@@ -195,7 +196,7 @@
 		if(!apiInstance.ready){
 			apiInstance.init();
 		}
-		apiInstance.initPromise.then(loadApiSpecific);
+		apiInstance.initPromise.finally(loadApiSpecific);
 		apiInstance.initPromise.then(function(){
 			runApiSearch("",SelectorsHelper.findDataFromElement(document.getElementById("player-selector")));
 		});

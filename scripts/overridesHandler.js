@@ -82,16 +82,7 @@ class OverridesHandler{
 			let rankEstStr="N/A";
 			if(apiInstance.ready){
 				let rankEstimate=apiInstance.getRankEstimate(this.player.ptsTheoretical,this.player.id);
-				switch(rankEstimate){
-					case -2:
-						rankEstStr="Not Implemented";
-					break;
-					case -1:
-						rankEstStr="Err";
-					break;
-					default:
-						rankEstStr=rankEstimate;
-				}
+				rankEstStr=msgIfErrValue(rankEstimate);
 			}
             resultEl.innerText="Theoretical pts: "+round(this.player.ptsTheoretical)+", real pts: "+round(this.player.ptsLocal)+", resulting in a difference of "+(diff>0?"+":"")+round(diff)+" pts. "+"Rank estimate: "+rankEstStr;
         }
