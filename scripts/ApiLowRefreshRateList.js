@@ -194,21 +194,42 @@ class ApiLowRefreshRateList extends ApiInterface{
 		}
         return score;
 	}
+	
+	/*
+	 * @param recs - {demonID1:progress1,demonID2:progress2}
+	*/
+	getSortedRecordInfoByPointsDescending(recs){
+		let recsArr=[];
+        for(let key in recs){
+            let r=recs[key];
+            recsArr.push({
+				levelID:key,
+				progress:r.progress,
+				unweightedScore:this.score(key,r.progress)
+			});
+        }
+		recsArr.sort(function(a,b){
+			return b.unweightedScore-a.unweightedScore;
+		});
+		
+		//anything using this is likely interested in weighted points too:
+		for(let i=0;i<recsArr.length;i++){
+			let item=recsArr[i];
+			let weightedScore=item.unweightedScore*Math.pow(0.95,i)
+			item.weightedScore=weightedScore;
+		}
+		return recsArr;
+	}
 
     /*
-    * @param arr - Array where keys are demonIDs, and values have "progress" property, which is integer percentage progress.
+    * @param recs - Object where keys are demonIDs, and values have "progress" property, which is integer percentage progress.
     */
 	//overwrite if needed (e.g. to add score weighing)
-    getPtsFromArr(arr){
-		let ptsArr=[];
-        for(let key in arr){
-            let r=arr[key];
-            ptsArr.push(this.score(key,r.progress));
-        }
-		ptsArr.sort(function(a,b){return b-a;});
+    getPtsFromArr(recs){
+		let sortedRecsInfo=this.getSortedRecordInfoByPointsDescending(recs);
 		let pts=0;
-		for(let i=0;i<ptsArr.length;i++){
-			pts+=ptsArr[i]*Math.pow(0.95,i); //osu reference
+		for(let i=0;i<sortedRecsInfo.length;i++){
+			pts+=sortedRecsInfo[i].weightedScore; //osu reference
 		}
         return pts;
     }

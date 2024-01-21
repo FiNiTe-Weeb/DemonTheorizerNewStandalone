@@ -151,6 +151,36 @@ class ApiInterface{
 	}
 
     /*
+    * @param recs - records array, key is levelID, each item has property "progress"
+	* returns smth like:
+	{
+		sortKeys:["sortableKey1"],
+		data:{
+			whateverKeyUWant:{sortableKey1:sortableValue1}}
+		}
+	}
+    */
+	//overwrite if needed
+	getSortingDataForRecords(recs){
+		let recordsInfo=[];
+		for(let key in recs){
+			let item=recs[key];
+			let levelInfo=this.getLevelByID(key);
+			let points=this.score(key,item.progress);
+			recordsInfo.push({
+				levelID:key,
+				position:levelInfo.position,
+				points:points,
+				html:item.progress+"% on "+levelInfo.name+", for "+round(points)+"pts"
+			})
+		}
+		return {
+			sortKeys:["levelID","position","points"],
+			data:recordsInfo
+		};
+	}
+
+    /*
     * @param arr - Array where keys are demonIDs, and values have "progress" property, which is integer percentage progress.
     */
 	//overwrite if needed (e.g. to add score weighing)

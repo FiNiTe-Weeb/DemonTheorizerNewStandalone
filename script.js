@@ -48,6 +48,7 @@
 
     //Start it all
     log.i("uwu");
+	Sortable.init();
     window.addEventListener('load', initSelectors);
 	
 	function initSelectors(){
@@ -168,8 +169,7 @@
         log.i("setting formula",formulaName);
 		ApiInterface.getCurrentApiInstance().currentFormula=formulaName;
 		document.getElementById("current-formula").innerText="Current Formula: "+formulaName;
-		calcState.currentPlayer.clearRRecList();
-		calcState.currentPlayer.appendRRecList();
+		calcState.currentPlayer.updateRRecList();
 		calcState.currentPlayer.updateRealPoints();
 		calcState.currentPlayer.updateTheoreticalPoints();
 		calcState.currentPlayer.oHandler.updateOverridesList();

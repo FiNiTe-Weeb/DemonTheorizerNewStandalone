@@ -33,7 +33,7 @@ class PlayerState{
 				thisRef.rRecs=records;
 				
 				//put real records
-				thisRef.appendRRecList();
+				thisRef.updateRRecList();
                 thisRef.playerPostLoad();
             });
         }
@@ -47,6 +47,7 @@ class PlayerState{
 			return Promise.resolve(); //temp hack so i can update override stuff after player loads (cuz i also need loadPlayerInfo handling so has 2 be promise)
 		}
 		
+		//old func
 		appendRRecList(){
 			let apiInstance=ApiInterface.getCurrentApiInstance();
 			let rRecsList=document.getElementById("og-record-list");
@@ -64,9 +65,18 @@ class PlayerState{
 			}
 		}
 		
-		//move common code in these 2 funcs cuz i hate code duping
 		clearRRecList(){
-			document.getElementById("og-record-list").innerHTML=""; //clear old
+			let rRecsList=document.getElementById("og-record-list");
+			let recsSortable=Sortable.findFromElement(rRecsList);
+			recsSortable.updateData([]);
+		}
+		
+		updateRRecList(){
+			let apiInstance=ApiInterface.getCurrentApiInstance();
+			let rRecsList=document.getElementById("og-record-list");
+			let recsSortable=Sortable.findFromElement(rRecsList);
+			let sortInfo=ApiInterface.getCurrentApiInstance().getSortingDataForRecords(calcState.currentPlayer.rRecs);
+			recsSortable.setState(sortInfo.data,sortInfo.sortKeys,"points",false);
 		}
 		
 		playerPostLoad(){
