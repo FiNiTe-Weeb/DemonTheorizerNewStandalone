@@ -186,10 +186,20 @@ class ApiLowRefreshRateList extends ApiInterface{
 			let levelInfo=this.getLevelByID(item.levelID);
 			item.html="#"+(i+1)+": "+item.progress+"% on #"+levelInfo.position+": "+levelInfo.name+", for "+round(item.unweightedPoints)+"pts ("+round(item.weightedPoints)+"pts)"
 		}
-		return {
-			sortKeys:["unweightedPoints"/*,"weightedPoints"*/,"position","levelID"],
-			data:sortedRecordInfo
-		};
+		return sortedRecordInfo;
+	}
+	
+	/*
+	 * RETURNS NEW OBJ EACH TIME WHICH CAN BE MUTATED
+	*/
+	//overwrite if needed
+	getRecordSortKeys(){
+		return [
+			{key:"unweightedPoints",label:"points",ascending:false},
+			//{key:"weightedPoints",ascending:false},
+			{key:"position",ascending:true},
+			//{key:"levelID",ascending:true}
+		];
 	}
 	
 	/*

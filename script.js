@@ -85,6 +85,14 @@
 			currentApiStr+=", People with points>0: "+msgIfErrValue(apiInstance.getNumberOfScoreHavers());
 			document.getElementById("current-api").innerText=currentApiStr;
 			setFormula(apiInstance.currentFormula); //this is mostly here to set the current formula text lul
+			
+			//records sorting stuff
+			let rRecSortable=Sortable.findFromElement(document.getElementById("og-record-list"));
+			if(rRecSortable!=null){
+				let sortKeys=apiInstance.getRecordSortKeys();
+				rRecSortable.updateSortKeyAndSortKeys(sortKeys,sortKeys[0]);
+				rRecSortable.regenSortByButtons();
+			}
 		});
 		document.querySelector("main").setAttribute("data-api",ApiInterface.currentApi); //for css stuff
 	}

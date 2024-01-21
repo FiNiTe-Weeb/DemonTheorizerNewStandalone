@@ -180,10 +180,19 @@ class ApiInterface{
 		for(let i=0;i<recordsInfo.length;i++){
 			recordsInfo[i].html="#"+(i+1)+": "+recordsInfo[i].html; //add pb rank
 		}
-		return {
-			sortKeys:["points","position","levelID"],
-			data:recordsInfo
-		};
+		return recordsInfo;
+	}
+	
+	/*
+	 * RETURNS NEW OBJ EACH TIME WHICH CAN BE MUTATED
+	*/
+	//overwrite if needed
+	getRecordSortKeys(){
+		return [
+			{key:"points",ascending:false},
+			{key:"position",ascending:true},
+			{key:"levelID",ascending:true}
+		];
 	}
 
     /*

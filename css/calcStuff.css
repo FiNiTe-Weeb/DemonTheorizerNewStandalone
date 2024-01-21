@@ -92,6 +92,30 @@
 			width:100%;
 		}
 		
+		#og-record-list{
+			margin-top:0;
+		}
+		
+		[data-target-id="og-record-list"]{
+			display:inline;
+			padding-left:0;
+		}
+		
+		.sortable-sort-by-container button{
+			width:initial;
+			padding: 4px;
+		}
+		
+		button.selected{
+			border: 2px solid #7F7F7F;
+		}
+		
+		.sortable-sort-by-container li{
+			list-style:none;
+			display: inline;
+			margin: 4px;
+		}
+		
 		button:hover{
 			background-color:rgb(223, 223, 223)
 		}

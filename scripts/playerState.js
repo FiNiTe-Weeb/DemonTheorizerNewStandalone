@@ -76,7 +76,7 @@ class PlayerState{
 			let rRecsList=document.getElementById("og-record-list");
 			let recsSortable=Sortable.findFromElement(rRecsList);
 			let sortInfo=ApiInterface.getCurrentApiInstance().getSortingDataForRecords(calcState.currentPlayer.rRecs);
-			recsSortable.setState(sortInfo.data,sortInfo.sortKeys,sortInfo.sortKeys[0],false);
+			recsSortable.updateData(sortInfo);
 		}
 		
 		playerPostLoad(){
