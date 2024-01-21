@@ -60,10 +60,6 @@
 		loadApiBtn.addEventListener("click",loadApiButtonCallback);
 	}
 	
-    function loadCalc(){
-		loadApiSpecific();
-    }
-	
 	function loadApiSpecific(){
 		calcState.currentPlayer=new PlayerState(0);
 		//clear anything that might be set already
@@ -199,7 +195,7 @@
 		if(!apiInstance.ready){
 			apiInstance.init();
 		}
-		apiInstance.initPromise.then(loadCalc);
+		apiInstance.initPromise.then(loadApiSpecific);
 		apiInstance.initPromise.then(function(){
 			runApiSearch("",SelectorsHelper.findDataFromElement(document.getElementById("player-selector")));
 		});
