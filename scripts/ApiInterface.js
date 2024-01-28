@@ -39,7 +39,7 @@ class ApiInterface{
         this.levelIDtoIndex=null;
 		this.ready=false;
 		this.loadedPlayersData={}; //playerdata, key is id
-		this.currentFormula="Latest"; //null for latest
+		this.currentFormula="Latest";
 		this.formulas={"Latest":function(){log.e("formulas.latest method not implemented");}};
 		let thisRef=this;
 		this.initPromise=new Promise(function(res,rej){
