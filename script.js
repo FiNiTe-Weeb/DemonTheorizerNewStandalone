@@ -138,7 +138,7 @@
 		let formulaSelectorList=formulaSelector.getElementsByTagName("ul")[0];
 		
 		let apiInstance=ApiInterface.getCurrentApiInstance();
-		for(formulaName in apiInstance.formulas){
+		for(let formulaName in apiInstance.formulas){
                 let option=document.createElement("li");
                 option.setAttribute("data-id",formulaName);
                 option.innerText=formulaName;
