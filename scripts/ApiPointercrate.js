@@ -148,15 +148,16 @@ class ApiPointercrate extends ApiInterface{
     */
     getRankEstimate(score,playerID=0){
 		let actualRank=Infinity;
-		if(playerID!=0){
-			for(let i=0;i<this.scoreCache.length;i++){
-				if(playerID==this.scoreCache[i].id){
-					actualRank=this.scoreCache[i].rank;
-					break;
+		if(this.scoreCache!=null){
+			if(playerID!=0){
+				for(let i=0;i<this.scoreCache.length;i++){
+					if(playerID==this.scoreCache[i].id){
+						actualRank=this.scoreCache[i].rank;
+						break;
+					}
 				}
 			}
-		}
-		if(this.scoreCache!=null){
+			
 			for(let i=0;i<this.scoreCache.length;i++){
 				if(round(score,6)>=round(this.scoreCache[i].score,6)){//round to avoid some inconsistency, cuz my js and pointercrate values differentiate by a tiny bit (like part per trillion or smth) (e.g. i dont want 1234.1231234 to be treated as bigger than 1234.1231233 cuz thats likely to just be differences in calculation, lrr and idl code doesnt need this logic cuz im calculating those scores in js anyway)
 					let rank=i+1;
