@@ -28,8 +28,8 @@ class ApiPointercrate extends ApiInterface{
 				res(levelData);
 			}).catch(rej);
 		});
-		//i want scoreCachePromise to resolve even on err so it doesnt prevent promise.all from going
-		let scoreCachePromise=new Promise(function(res,rej){
+		//i want scoreCacheAttemptPromise to resolve even on err so it doesnt prevent promise.all from going
+		let scoreCacheAttemptPromise=new Promise(function(res,rej){
 			fetch(thisRef.scoreCacheEndpoint).then(function(resp){return resp.json();}).then(function(data){
 				if(data.status&&data.status>=400){
 					return Promise.reject(data);
@@ -42,7 +42,7 @@ class ApiPointercrate extends ApiInterface{
 				res(null);
 			});
 		});
-		Promise.all([levelsPromise,scoreCachePromise]).then(function(){
+		Promise.all([levelsPromise,scoreCacheAttemptPromise]).then(function(){
 			thisRef.ready=true;
 			thisRef.callOnLoad();
 		});
