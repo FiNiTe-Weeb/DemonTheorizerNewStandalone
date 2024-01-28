@@ -122,19 +122,17 @@ class ApiInterface{
 	//OVERWRITE
 	getPlayerRecords(playerData){
 		log.w("getPlayerRecords example method");
-		return this.getPlayerData(playerID,forceUpdate).then(function(data){
-            let records={};
-			
-			//put non-verifications from api response in player records list
-            let unsortedRecords=data.records;
-            for(let i=0;i<unsortedRecords.length;i++){
-                let item=unsortedRecords[i];
-                if(!(item.demon.position>150)){
-                    records[item.demon.id]={progress:item.progress};
-                }
+        let records={};
+		
+		//put non-verifications from api response in player records list
+        let unsortedRecords=playerData.records;
+        for(let i=0;i<unsortedRecords.length;i++){
+            let item=unsortedRecords[i];
+            if(!(item.demon.position>150)){
+                records[item.demon.id]={progress:item.progress};
             }
-			return records;
-		});
+        }
+		return records;
 	}
 
     /*
