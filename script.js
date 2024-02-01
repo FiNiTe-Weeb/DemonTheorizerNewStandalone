@@ -12,6 +12,7 @@
     let log=new Logger();
 	
 	ApiInterface.registerApiInstance("pointercrate",new ApiPointercrate());
+	ApiInterface.registerApiInstance("aredl",new ApiAREDL());
 	ApiInterface.registerApiInstance("insaneDemonList",new ApiInsaneDemonList());
 	ApiInterface.registerApiInstance("lowRefreshRateList",new ApiLowRefreshRateList());
 	ApiInterface.registerApiInstance("test",new ApiInterface());
