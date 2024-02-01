@@ -165,6 +165,9 @@ class ApiPointercrate extends ApiInterface{
 					return rank;
 				}
 			}
+			if(round(this.scoreCache[this.scoreCache.length-1].score,6)>round(score,6)){ //if less score than anyone on lb (if 0 scores disappear)
+				return this.scoreCache.length+1;
+			}
 		}
 		return -1;
 		
