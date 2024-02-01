@@ -6,10 +6,13 @@
     
 
     //DEFINE VARS/CONSTS
+	
+	let getPararms=new URLSearchParams(location.search);
 
     const TEST=true;
 
     let log=new Logger();
+    let calcState=new CalcState();
 	
 	ApiInterface.registerApiInstance("pointercrate",new ApiPointercrate());
 	ApiInterface.registerApiInstance("aredl",new ApiAREDL());
@@ -17,13 +20,17 @@
 	ApiInterface.registerApiInstance("lowRefreshRateList",new ApiLowRefreshRateList());
 	ApiInterface.registerApiInstance("test",new ApiInterface());
 	let startApi="pointercrate";
+	let defaultApiFromURL=getPararms.get("defaultApi");
+	if(defaultApiFromURL!=null&& typeof defaultApiFromURL==="string"&&calcState.apis[defaultApiFromURL]!==undefined){
+		startApi=defaultApiFromURL;
+	}
+	document.getElementById("api-selector").setAttribute("data-default",startApi);
 	ApiInterface.setCurrentApiInstance(startApi);
     window.addEventListener('load', function(){
 		loadApi(startApi);
 	});
 	ApiInterface.getCurrentApiInstance().init();
 
-    let calcState=new CalcState();
     if(TEST){
         window.calcState=calcState;
     }
