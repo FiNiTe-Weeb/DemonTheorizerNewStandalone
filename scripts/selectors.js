@@ -94,6 +94,16 @@ function onOptionsListUpdate(selectorInfo){
 		if(defaultItem){
 			selectorInfo.selectorSearch.value=defaultItem.innerText;
 			selectorInfo.selector.setAttribute("data-id",defaultID);
+		}else{
+			//fallback index
+			let fallbackIndex=selectorInfo.selector.getAttribute("data-default-index-fallback");
+			let fallbackItem=selectorInfo.selectorList.children[fallbackIndex];
+			if(fallbackItem){
+				selectorInfo.selectorSearch.value=fallbackItem.innerText;
+				selectorInfo.selector.setAttribute("data-id",fallbackItem.getAttribute("data-id"));
+			}else{
+				log.w("onOptionsListUpdate could not find default item on selector: ",selectorInfo);
+			}
 		}
 	}
 }
