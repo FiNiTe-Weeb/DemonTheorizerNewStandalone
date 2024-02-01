@@ -34,3 +34,8 @@ function msgIfErrValue(val){
 	}
 	
 }
+
+//wrapper because fuck you thats why
+function fetchJSON(){
+	return fetch(...arguments).then(function(resp){return resp.json();});
+}
