@@ -63,6 +63,10 @@
 		SelectorsHelper.init();
         let loadRecordsBtn=document.getElementById("load-player-records");
 		loadRecordsBtn.addEventListener("click",loadRecordsOfPlayer);
+		let loadEmptyPlayerBtn=document.getElementById("load-empty-player");
+		loadEmptyPlayerBtn.addEventListener("click",function(){
+			calcState.currentPlayer=new PlayerState(0);
+		});
         let loadFormulaBtn=document.getElementById("load-formula");
 		loadFormulaBtn.addEventListener("click",loadFormulaButtonCallback);
         let loadApiBtn=document.getElementById("load-api");
