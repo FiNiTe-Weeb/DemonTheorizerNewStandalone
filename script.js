@@ -229,9 +229,12 @@
 	function rRecListClickCallback(evt){
 		let trg=evt.target;
 		if(trg&&trg.classList.contains("remove-rrec")){
-			console.log(trg);
 			let lvlID=trg.dataset.levelid;
 			calcState.currentPlayer.oHandler.addOverride(lvlID,0,calcState.currentPlayer);
+			
+			let apiInstance=ApiInterface.getCurrentApiInstance();
+			let lvl=apiInstance.getLevelByID(lvlID);
+			Popup.message("Added 0% override for "+lvl.name,1500);
 		}
 	}
 	
