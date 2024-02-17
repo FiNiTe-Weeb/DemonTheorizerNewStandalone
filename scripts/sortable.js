@@ -86,7 +86,27 @@ class Sortable{
 		for(let i=0;i<sortedData.length;i++){
 			let item=sortedData[i];
 			let itemEl=document.createElement("li");
-			itemEl.innerHTML=item.html;
+			let template=this.sortableEl.dataset.template;
+			if(template){
+				let str=template;
+				let strIndex=0;
+				let maxCounter=0;
+				while(strIndex=str.indexOf("${"), strIndex>=0){
+					if(maxCounter>100000){
+						log.e("Sortable.refreshOutput hit maxCounter", this);
+						break;
+					}
+					maxCounter++;
+					
+					let endIndex=str.indexOf("}",strIndex+1);
+					let replaceKey=str.substring(strIndex+2,endIndex);
+					let replaceData=item[replaceKey];
+					str=str.replaceAll("${"+replaceKey+"}",replaceData);
+				}
+				itemEl.innerHTML=str;
+			}else{
+				itemEl.innerHTML=item.html;
+			}
 			el.appendChild(itemEl);
 		}
 	}

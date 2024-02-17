@@ -71,6 +71,10 @@
 		loadFormulaBtn.addEventListener("click",loadFormulaButtonCallback);
         let loadApiBtn=document.getElementById("load-api");
 		loadApiBtn.addEventListener("click",loadApiButtonCallback);
+		
+		
+		let ogRecList=document.getElementById("og-record-list");
+		ogRecList.addEventListener("click",rRecListClickCallback);
 	}
 	
 	function loadApiSpecific(){
@@ -220,6 +224,15 @@
 		apiInstance.initPromise.then(function(){
 			runApiSearch("",SelectorsHelper.findDataFromElement(document.getElementById("player-selector")));
 		});
+	}
+	
+	function rRecListClickCallback(evt){
+		let trg=evt.target;
+		if(trg&&trg.classList.contains("remove-rrec")){
+			console.log(trg);
+			let lvlID=trg.dataset.levelid;
+			calcState.currentPlayer.oHandler.addOverride(lvlID,0,calcState.currentPlayer);
+		}
 	}
 	
     if(TEST){

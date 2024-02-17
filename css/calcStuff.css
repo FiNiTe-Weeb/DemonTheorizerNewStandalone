@@ -170,3 +170,12 @@
 		[data-api="lowRefreshRateList"] .note-lowRefreshRateList{
 			display: initial;
 		}
+		
+		.remove-rrec{
+			display: inline;
+		}
+		.remove-rrec:after{
+			content: "\274C";
+			font-size:0.75em;
+			padding:4px;
+		}
