@@ -4,8 +4,10 @@ class Popup{
 	static message(message,duration){
 		let popup=document.getElementById("popup");
 		if(!popup){
-			document.body.innerHTML+=Popup.template;
-			popup=document.getElementById("popup");
+			popup=document.createElement("div");
+			document.body.appendChild(popup);
+			popup.outerHTML=Popup.template;
+			popup=document.getElementById("popup"); //have to get reference to popup replaced by outerHTML edit
 			if(!popup){
 				log.e("cant make popup");
 				return;
