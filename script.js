@@ -28,6 +28,7 @@
 	ApiInterface.setCurrentApiInstance(startApi);
     window.addEventListener('load', function(){
 		loadApi(startApi);
+		initSelectors();
 	});
 	ApiInterface.getCurrentApiInstance().init();
 
@@ -57,7 +58,6 @@
     //Start it all
     log.i("uwu");
 	Sortable.init();
-    window.addEventListener('load', initSelectors);
 	
 	function initSelectors(){
 		SelectorsHelper.init();
