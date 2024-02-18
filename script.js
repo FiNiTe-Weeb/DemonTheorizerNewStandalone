@@ -303,7 +303,7 @@
 			}
 			result=setOverrides(overridesToAdd);
 			if(result){
-				Popup.message("Pasted different overrides from clipboard",2000);
+				Popup.message("Pasted better overrides from clipboard",2000);
 			}
 		});
 	}
@@ -321,7 +321,7 @@
 			}
 			result=setOverrides(overridesToAdd);
 			if(result){
-				Popup.message("Pasted different overrides from clipboard",2000);
+				Popup.message("Pasted worse overrides from clipboard",2000);
 			}
 		});
 	}
