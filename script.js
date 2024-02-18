@@ -85,6 +85,9 @@
 		let pasteTRecsJsonBtn=document.getElementById("paste-trec-json");
 		copyTRecsJsonBtn.addEventListener("click",copyTRecsJson);
 		pasteTRecsJsonBtn.addEventListener("click",pasteTRecsJson);
+		
+		let clearOverridesBtn=document.getElementById("clear-overrides");
+		clearOverridesBtn.addEventListener("click",clearOverrides);
 	}
 	
 	function loadApiSpecific(){
@@ -248,6 +251,10 @@
 		}
 	}
 	
+	function clearOverrides(){
+		calcState.currentPlayer.oHandler.clearOverrides(calcState.currentPlayer);
+	}
+	
 	function copyOverridesJson(){
 		let str=JSON.stringify(calcState.currentPlayer.oHandler.overrides);
 		navigator.clipboard.writeText(str);
@@ -294,10 +301,6 @@
 		}
 		
 		let oHandler=calcState.currentPlayer.oHandler;
-		oHandler.clearOverrides();
-		calcState.currentPlayer.initTRecs();
-		calcState.currentPlayer.updateTheoreticalPoints()
-		oHandler.updateOverridesList();
 		
 		for(let key in overrides){
 			let override=overrides[key];

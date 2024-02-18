@@ -14,8 +14,11 @@ class OverridesHandler{
             }
         }
 
-        clearOverrides(){
+        clearOverrides(player){
             this.overrides={};
+			player.initTRecs();
+			player.updateTheoreticalPoints()
+			this.updateOverridesList();
         }
 
         //plan: give a set of tRecs and this func should figure out the differences
