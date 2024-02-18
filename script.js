@@ -264,7 +264,7 @@
 	function copyTRecsJson(){
 		let str=JSON.stringify(calcState.currentPlayer.tRecs);
 		navigator.clipboard.writeText(str);
-		Popup.message("Copied override JSON to clipboard",2000);
+		Popup.message("Copied theretical records JSON to clipboard",2000);
 	}
 	
 	function pasteOverridesJson(){
