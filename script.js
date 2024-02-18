@@ -80,6 +80,11 @@
 		let pasteOverridesJsonBtn=document.getElementById("paste-overrides-json");
 		copyOverridesJsonBtn.addEventListener("click",copyOverridesJson);
 		pasteOverridesJsonBtn.addEventListener("click",pasteOverridesJson);
+		
+		let copyTRecsJsonBtn=document.getElementById("copy-trec-json");
+		let pasteTRecsJsonBtn=document.getElementById("paste-trec-json");
+		copyTRecsJsonBtn.addEventListener("click",copyTRecsJson);
+		pasteTRecsJsonBtn.addEventListener("click",pasteTRecsJson);
 	}
 	
 	function loadApiSpecific(){
@@ -249,9 +254,16 @@
 		Popup.message("Copied override JSON to clipboard",2000);
 	}
 	
+	function copyTRecsJson(){
+		let str=JSON.stringify(calcState.currentPlayer.tRecs);
+		navigator.clipboard.writeText(str);
+		Popup.message("Copied override JSON to clipboard",2000);
+	}
+	
 	function pasteOverridesJson(){
 		if(!navigator.clipboard.readText){			
 			Popup.message("This browser does not support navigator.clipboard.readText",2000);
+			return;
 		}
 		navigator.clipboard.readText().then(function(str){
 			try{
@@ -279,8 +291,13 @@
 					let override=overrides[key];
 					oHandler.addOverride(key,override.progress,calcState.currentPlayer);
 				}
+				Popup.message("Pasted overrides from clipboard",2000);
 			}catch(e){Popup.message("Exception occured: "+e.message,4000);}
 		});
+	}
+	
+	function pasteTRecsJson(){
+		log.w("not done lol");
 	}
 	
     if(TEST){
