@@ -75,6 +75,11 @@
 		
 		let ogRecList=document.getElementById("og-record-list");
 		ogRecList.addEventListener("click",rRecListClickCallback);
+		
+		let copyOverridesJsonBtn=document.getElementById("copy-overrides-json");
+		let pasteOverridesJsonBtn=document.getElementById("paste-overrides-json");
+		copyOverridesJsonBtn.addEventListener("click",copyOverridesJson);
+		pasteOverridesJsonBtn.addEventListener("click",pasteOverridesJson);
 	}
 	
 	function loadApiSpecific(){
@@ -236,6 +241,46 @@
 			let lvl=apiInstance.getLevelByID(lvlID);
 			Popup.message("Added 0% override for "+lvl.name,1500);
 		}
+	}
+	
+	function copyOverridesJson(){
+		let str=JSON.stringify(calcState.currentPlayer.oHandler.overrides);
+		navigator.clipboard.writeText(str);
+		Popup.message("Copied override JSON to clipboard",2000);
+	}
+	
+	function pasteOverridesJson(){
+		if(!navigator.clipboard.readText){			
+			Popup.message("This browser does not support navigator.clipboard.readText",2000);
+		}
+		navigator.clipboard.readText().then(function(str){
+			try{
+				let overrides=JSON.parse(str);
+				let apiInstance=ApiInterface.getCurrentApiInstance();
+				for(let key in overrides){
+					let override=overrides[key];
+					if(!apiInstance.getLevelByID(key)){
+						Popup.message("No level with ID \""+key+"\"",4000);
+						return;
+					}
+					if(override.progress===undefined){
+						Popup.message("Override item \""+key+"\" does not have property \"progress\"",4000);
+						return;
+					}
+				}
+				
+				let oHandler=calcState.currentPlayer.oHandler;
+				oHandler.clearOverrides();
+				calcState.currentPlayer.initTRecs();
+				calcState.currentPlayer.updateTheoreticalPoints()
+				oHandler.updateOverridesList();
+				
+				for(let key in overrides){
+					let override=overrides[key];
+					oHandler.addOverride(key,override.progress,calcState.currentPlayer);
+				}
+			}catch(e){Popup.message("Exception occured: "+e.message,4000);}
+		});
 	}
 	
     if(TEST){
