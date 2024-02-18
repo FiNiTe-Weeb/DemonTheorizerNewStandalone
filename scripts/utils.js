@@ -39,3 +39,16 @@ function msgIfErrValue(val){
 function fetchJSON(){
 	return fetch(...arguments).then(function(resp){return resp.json();});
 }
+
+//anything in recs that doesnt agree with recsToCheckAgainst will be returned
+function getRecDiff(recs,recsToCheckAgainst){
+	let rVal={};
+	for(let key in recs){
+		let rec=recs[key];
+		
+		if(recsToCheckAgainst[key]===undefined||rec.progress!==recsToCheckAgainst[key].progress){
+			rVal[key]=rec;
+		}
+	}
+	return rVal;
+}
