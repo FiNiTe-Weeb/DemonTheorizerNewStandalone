@@ -261,76 +261,71 @@
 	}
 	
 	function pasteOverridesJson(){
-		if(!navigator.clipboard.readText){			
-			Popup.message("This browser does not support navigator.clipboard.readText",2000);
-			return;
-		}
-		navigator.clipboard.readText().then(function(str){
-			try{
-				let overrides=JSON.parse(str);
-				let apiInstance=ApiInterface.getCurrentApiInstance();
-				for(let key in overrides){
-					let override=overrides[key];
-					if(!apiInstance.getLevelByID(key)){
-						Popup.message("No level with ID \""+key+"\"",4000);
-						return;
-					}
-					if(override.progress===undefined){
-						Popup.message("Override item \""+key+"\" does not have property \"progress\"",4000);
-						return;
-					}
-				}
-				
-				let oHandler=calcState.currentPlayer.oHandler;
-				oHandler.clearOverrides();
-				calcState.currentPlayer.initTRecs();
-				calcState.currentPlayer.updateTheoreticalPoints()
-				oHandler.updateOverridesList();
-				
-				for(let key in overrides){
-					let override=overrides[key];
-					oHandler.addOverride(key,override.progress,calcState.currentPlayer);
-				}
+		getOverridesFromClipboard().then(function(overrides){
+			result=setOverrides(overrides);
+			if(result){
 				Popup.message("Pasted overrides from clipboard",2000);
-			}catch(e){Popup.message("Exception occured: "+e.message,4000);}
+			}
 		});
 	}
 	
 	function pasteTRecsJson(){
-		if(!navigator.clipboard.readText){			
-			Popup.message("This browser does not support navigator.clipboard.readText",2000);
-			return;
-		}
-		navigator.clipboard.readText().then(function(str){
-			try{
-				let overrides=JSON.parse(str);
-				let apiInstance=ApiInterface.getCurrentApiInstance();
-				let overridesToAdd=getRecDiff(overrides,calcState.currentPlayer.rRecs);
-				for(let key in overridesToAdd){
-					let override=overridesToAdd[key];
-					if(!apiInstance.getLevelByID(key)){
-						Popup.message("No level with ID \""+key+"\"",4000);
-						return;
-					}
-					if(override.progress===undefined){
-						Popup.message("Override item \""+key+"\" does not have property \"progress\"",4000);
-						return;
-					}
-				}
-				
-				let oHandler=calcState.currentPlayer.oHandler;
-				oHandler.clearOverrides();
-				calcState.currentPlayer.initTRecs();
-				calcState.currentPlayer.updateTheoreticalPoints()
-				oHandler.updateOverridesList();
-				
-				for(let key in overridesToAdd){
-					let override=overrides[key];
-					oHandler.addOverride(key,override.progress,calcState.currentPlayer);
-				}
+		getOverridesFromClipboard().then(function(overrides){
+			let overridesToAdd=getRecDiff(overrides,calcState.currentPlayer.rRecs);
+			result=setOverrides(overridesToAdd);
+			if(result){
 				Popup.message("Pasted theretical records from clipboard",2000);
-			}catch(e){Popup.message("Exception occured: "+e.message,4000);}
+			}
 		});
+	}
+	
+	function setOverrides(overrides){
+		let apiInstance=ApiInterface.getCurrentApiInstance();
+		for(let key in overrides){
+			let override=overrides[key];
+			if(!apiInstance.getLevelByID(key)){
+				Popup.message("No level with ID \""+key+"\"",4000);
+				return false;
+			}
+			if(override.progress===undefined){
+				Popup.message("Override item \""+key+"\" does not have property \"progress\"",4000);
+				return false;
+			}
+		}
+		
+		let oHandler=calcState.currentPlayer.oHandler;
+		oHandler.clearOverrides();
+		calcState.currentPlayer.initTRecs();
+		calcState.currentPlayer.updateTheoreticalPoints()
+		oHandler.updateOverridesList();
+		
+		for(let key in overrides){
+			let override=overrides[key];
+			oHandler.addOverride(key,override.progress,calcState.currentPlayer);
+		}
+		return true
+	}
+	
+	function getOverridesFromClipboard(){
+		if(!navigator.clipboard.readText){	
+			let msg="This browser does not support navigator.clipboard.readText";
+			Popup.message(msg,2000);
+			return Promise.reject(msg);
+		}
+		
+		let promise=new Promise(function(res,rej){
+			navigator.clipboard.readText().then(function(str){
+				try{
+					let overrides=JSON.parse(str);
+					res(overrides);
+				}catch(e){
+					let msg="Exception occured: "+e.message;
+					Popup.message(msg,4000);
+					rej(msg);
+				}
+			});
+		});
+		return promise;
 	}
 	
     if(TEST){
