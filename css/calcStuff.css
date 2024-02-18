@@ -164,10 +164,16 @@
 		[data-api="pointercrate"] .note-pointercrate{
 			display: initial;
 		}
+		[data-api="aredl"] .note-aredl{
+			display: initial;
+		}
 		[data-api="insaneDemonList"] .note-insaneDemonList{
 			display: initial;
 		}
 		[data-api="lowRefreshRateList"] .note-lowRefreshRateList{
+			display: initial;
+		}
+		[data-api="test"] .note-test{
 			display: initial;
 		}
 		
