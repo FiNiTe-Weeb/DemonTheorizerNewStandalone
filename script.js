@@ -77,14 +77,18 @@
 		ogRecList.addEventListener("click",rRecListClickCallback);
 		
 		let copyOverridesJsonBtn=document.getElementById("copy-overrides-json");
-		let pasteOverridesJsonBtn=document.getElementById("paste-overrides-json");
-		copyOverridesJsonBtn.addEventListener("click",copyOverridesJson);
-		pasteOverridesJsonBtn.addEventListener("click",pasteOverridesJson);
-		
 		let copyTRecsJsonBtn=document.getElementById("copy-trec-json");
-		let pasteTRecsJsonBtn=document.getElementById("paste-trec-json");
+		copyOverridesJsonBtn.addEventListener("click",copyOverridesJson);
 		copyTRecsJsonBtn.addEventListener("click",copyTRecsJson);
-		pasteTRecsJsonBtn.addEventListener("click",pasteTRecsJson);
+		
+		let pasteAllOverridesBtn=document.getElementById("paste-all-overrides");
+		let pasteDifferentOverridesBtn=document.getElementById("paste-different-overrides");
+		let pasteBetterOverridesBtn=document.getElementById("paste-better-overrides");
+		let pasteWorseOverridesBtn=document.getElementById("paste-worse-overrides");
+		pasteAllOverridesBtn.addEventListener("click",pasteAllOverrides);
+		pasteDifferentOverridesBtn.addEventListener("click",pasteDifferentOverrides);
+		pasteBetterOverridesBtn.addEventListener("click",pasteBetterOverrides);
+		pasteWorseOverridesBtn.addEventListener("click",pasteWorseOverrides);
 		
 		let clearOverridesBtn=document.getElementById("clear-overrides");
 		clearOverridesBtn.addEventListener("click",clearOverrides);
@@ -267,21 +271,57 @@
 		Popup.message("Copied theretical records JSON to clipboard",2000);
 	}
 	
-	function pasteOverridesJson(){
+	function pasteAllOverrides(){
 		getOverridesFromClipboard().then(function(overrides){
 			result=setOverrides(overrides);
 			if(result){
-				Popup.message("Pasted overrides from clipboard",2000);
+				Popup.message("Pasted all overrides from clipboard",2000);
 			}
 		});
 	}
 	
-	function pasteTRecsJson(){
+	function pasteDifferentOverrides(){
 		getOverridesFromClipboard().then(function(overrides){
 			let overridesToAdd=getRecDiff(overrides,calcState.currentPlayer.rRecs);
 			result=setOverrides(overridesToAdd);
 			if(result){
-				Popup.message("Pasted theretical records from clipboard",2000);
+				Popup.message("Pasted different overrides from clipboard",2000);
+			}
+		});
+	}
+	
+	function pasteBetterOverrides(){
+		getOverridesFromClipboard().then(function(overrides){
+			let rRecs=calcState.currentPlayer.rRecs;
+			let overridesDiff=getRecDiff(overrides,rRecs);
+			let overridesToAdd={};
+			for(let key in overridesDiff){
+				let override=overridesDiff[key];
+				if(rRecs[key]===undefined||rRecs[key].progress===undefined||rRecs[key].progress<override.progress){
+					overridesToAdd[key]=override;
+				}
+			}
+			result=setOverrides(overridesToAdd);
+			if(result){
+				Popup.message("Pasted different overrides from clipboard",2000);
+			}
+		});
+	}
+	
+	function pasteWorseOverrides(){
+		getOverridesFromClipboard().then(function(overrides){
+			let rRecs=calcState.currentPlayer.rRecs;
+			let overridesDiff=getRecDiff(overrides,rRecs);
+			let overridesToAdd={};
+			for(let key in overridesDiff){
+				let override=overridesDiff[key];
+				if(rRecs[key]!==undefined&&rRecs[key].progress!==undefined&&rRecs[key].progress>override.progress){
+					overridesToAdd[key]=override;
+				}
+			}
+			result=setOverrides(overridesToAdd);
+			if(result){
+				Popup.message("Pasted different overrides from clipboard",2000);
 			}
 		});
 	}
