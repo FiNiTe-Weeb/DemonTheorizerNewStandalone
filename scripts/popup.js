@@ -1,5 +1,5 @@
 class Popup{
-	static template="<div id=\"popup\" style=\"position: fixed;top: 10%;left: 0;width: 100%;display: flex;flex-direction: row;/*! align-items: center; */justify-content: center;z-index: 250;\"><div id=\"popup-inner\" style=\"background: rgba(0,0,0,0.75);min-width: 50%;text-align: center;border-radius: 32px;/*! min-height: 4em; */padding: 16px;\">test message hi!!!</div></div>";
+	static template="<div id=\"popup\" style=\"position: fixed;top: 10%;left: 0;width: 100%;display: flex;flex-direction: row;/*! align-items: center; */justify-content: center;z-index: 250;\"><div id=\"popup-inner\" class=\"background\" style=\"border:2px solid rgb(127, 127, 127);min-width: 50%;text-align: center;border-radius: 32px;/*! min-height: 4em; */padding: 16px;\">test message hi!!!</div></div>";
 	
 	static message(message,duration){
 		let popup=document.getElementById("popup");
