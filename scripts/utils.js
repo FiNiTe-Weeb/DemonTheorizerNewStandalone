@@ -46,6 +46,7 @@ function getRecDiff(recs,recsToCheckAgainst){
 	for(let key in recs){
 		let rec=recs[key];
 		
+		//todo: 0 handling maybe
 		if(recsToCheckAgainst[key]===undefined||rec.progress!==recsToCheckAgainst[key].progress){
 			rVal[key]=rec;
 		}

@@ -119,6 +119,7 @@ class ApiInterface{
 		});
 	}
 	
+	//should be same format as rRecs/tRecs in PlayerState
 	//OVERWRITE
 	getPlayerRecords(playerData){
 		log.w("getPlayerRecords example method");

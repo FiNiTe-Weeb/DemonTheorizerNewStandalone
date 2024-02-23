@@ -2,8 +2,7 @@ class ApiInsaneDemonList extends ApiInterface{
 	
 	constructor(){
 		super("https://insanedemonlist.com/api/");
-		this.playerData={};
-		this.sortedPlayerKeys=[];
+		this.playerData=[];
 		this.levelNameToID={};
 		this.formulas={
 			"Latest":this.pointsFormula,
@@ -12,7 +11,7 @@ class ApiInsaneDemonList extends ApiInterface{
 	
 	init(){
 		let thisRef=this;
-		let levelPromise=fetch(this.endpoint+"?start=1").then(function(resp){
+		let levelPromise=fetch(this.endpoint+"levels").then(function(resp){
 			if(!resp.ok){
 				return Promise.reject(resp);
 			}
@@ -26,51 +25,34 @@ class ApiInsaneDemonList extends ApiInterface{
 				let item=data[key];
 				let pos=counter+1;
 				thisRef.levelData[counter]={
-					id:item._id,
+					id:item.id,
 					name:item.name,
 					position:pos
 				};
-				thisRef.levelPositionToId[pos]=item._id;
-				thisRef.levelIDtoIndex[item._id]=counter;
-				thisRef.levelNameToID[item.name]=item._id;
+				thisRef.levelPositionToId[pos]=item.id;
+				thisRef.levelIDtoIndex[item.id]=counter;
+				thisRef.levelNameToID[item.name]=item.id; //todo: prob wont need this
 				counter++;
 			}
 			
 		});
-		let playerPromise=fetch(this.endpoint+"leaderboard").then(function(resp){
+		let playerPromise=fetch(this.endpoint+"leaderboards").then(function(resp){
 			if(!resp.ok){
 				return Promise.reject(resp);
 			}
 			return resp.json();
 		}).then(function(data){
-			thisRef.playerData=data;
+			for(let i=0;i<data.length;i++){
+				let item=data[i];
+				thisRef.playerData.push({
+					id:item.id,
+					name:item.name,
+					rank:item.position,
+					score:item.records
+				});
+			}
 		});
 		Promise.all([levelPromise,playerPromise]).then(function(){
-			//prepare player data
-			for(let key in thisRef.playerData){
-				let item=thisRef.playerData[key];
-				item.id=key; //when searching player, caller expects ids
-				item.records={};
-				for(let beatenLvl of item.levels){
-					let lvlID=thisRef.levelNameToID[beatenLvl.name];
-					item.records[lvlID]={
-						progress:100,
-						demon:{id:lvlID}
-					}
-				}				
-				item.score=thisRef.getPtsFromArr(item.records);
-				thisRef.sortedPlayerKeys.push(key);
-			}
-			//sort descending score order
-			thisRef.sortedPlayerKeys.sort(function(a,b){
-				let pA=thisRef.playerData[a];
-				let pB=thisRef.playerData[b];
-				return pB.score-pA.score;
-			});
-			//assign ranks
-			for(let i=0;i<thisRef.sortedPlayerKeys.length;i++){
-				thisRef.playerData[thisRef.sortedPlayerKeys[i]].rank=i+1;
-			}
 			thisRef.ready=true;
 			thisRef.callOnLoad();
 		}).catch(this.callOnFail);
@@ -81,8 +63,8 @@ class ApiInsaneDemonList extends ApiInterface{
 		return new Promise(function(res){
 			name=name.toLowerCase();
 			let foundPlayers=[];
-			for(let i=0;i<thisRef.sortedPlayerKeys.length;i++){ //we want results to appear sorted so we loop this array
-				let item=thisRef.playerData[thisRef.sortedPlayerKeys[i]];
+			for(let key in thisRef.playerData){ //we want results to appear sorted so we loop this array
+				let item=thisRef.playerData[key];
 				if(item.name.toLowerCase().indexOf(name)>=0){
 					foundPlayers.push(item);
 				}
@@ -92,19 +74,24 @@ class ApiInsaneDemonList extends ApiInterface{
 	}
 	
 	getPlayerData(playerID,forceUpdate){
+		//this.loadedPlayersData={};
+		if(this.loadedPlayersData&&this.loadedPlayersData[playerID]&&(!forceUpdate)){
+			return Promise.resolve(this.loadedPlayersData[playerID]);
+		}
 		let thisRef=this;
-		return new Promise(function(res,rej){
-			let playerData=thisRef.playerData[playerID];
-			if(playerData){
-				res(playerData);
-			}else{
-				rej();
-			}
+		return fetchJSON(this.endpoint+"leaderboard/"+playerID).then(function(data){
+			thisRef.loadedPlayersData[playerID]=data;
+			return data;
 		});
 	}
 	
 	getPlayerRecords(playerData){
-		return playerData.records;
+		let recs={};
+		for(let key in playerData.records){
+			let item=playerData.records[key];
+			recs[item.level.id]={progress:100};
+		}
+		return recs;
 	}
 
     /*
@@ -122,8 +109,8 @@ class ApiInsaneDemonList extends ApiInterface{
 			}
 		}
 		if(this.playerData!=null){
-			for(let i=0;i<this.sortedPlayerKeys.length;i++){ //we need to go thru sorted arr so as soon as score reaches low enough we hit target rank
-				if(score>=this.playerData[this.sortedPlayerKeys[i]].score){
+			for(let i=0;i<this.playerData.length;i++){ //we need to go thru sorted arr so as soon as score reaches low enough we hit target rank
+				if(round(score)>=round(this.playerData[i].score)){
 					let rank=i+1;
 					if(actualRank<rank){rank--;} //if their real rank is above (smaller) their theoretical rank, we remove 1 from the rank to account for the fact there should be 1 less spot taken
 					return rank;
@@ -218,4 +205,14 @@ class ApiInsaneDemonList extends ApiInterface{
 	//	arr[0]=num;
 	//	return arr[0];
 	//}
+	
+	/*
+	 * RETURNS NEW OBJ EACH TIME WHICH CAN BE MUTATED
+	*/
+	getRecordSortKeys(){
+		return [
+			{key:"points",ascending:false},
+			{key:"position",ascending:true}
+		];
+	}
 }
