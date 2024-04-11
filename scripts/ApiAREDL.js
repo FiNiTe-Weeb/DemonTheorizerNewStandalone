@@ -80,7 +80,7 @@ class ApiAREDL extends ApiInterface{
 		if(thisRef.loadedPlayersData[playerID]&&(!forceUpdate)){
 			playerFetchPromise=Promise.resolve(thisRef.loadedPlayersData[playerID]);
 		}else{
-			playerFetchPromise=fetchJSON(this.endpoint+"aredl/user?id="+playerID);
+			playerFetchPromise=fetchJSON(this.endpoint+"aredl/profiles/"+playerID);
 		}
 		
 		return playerFetchPromise.then(function(data){
