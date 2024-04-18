@@ -87,7 +87,8 @@ class OverridesHandler{
 				let rankEstimate=apiInstance.getRankEstimate(this.player.ptsTheoretical,this.player.id);
 				rankEstStr=msgIfErrValue(rankEstimate);
 			}
-            resultEl.innerText="Theoretical pts: "+round(this.player.ptsTheoretical)+", real pts: "+round(this.player.ptsLocal)+", resulting in a difference of "+(diff>0?"+":"")+round(diff)+" pts. "+"Rank estimate: "+rankEstStr;
+			let extraStr=apiInstance.extraStr(this.player.rRecs,this.player.tRecs);
+            resultEl.innerText="Theoretical pts: "+round(this.player.ptsTheoretical)+", real pts: "+round(this.player.ptsLocal)+", resulting in a difference of "+(diff>0?"+":"")+round(diff)+" pts. "+"Rank estimate: "+rankEstStr+(extraStr.length>0?", "+extraStr:"");
         }
 		
 		addOverrideHTML(demID,progress){

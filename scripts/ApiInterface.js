@@ -242,4 +242,12 @@ class ApiInterface{
 		}
         return rankEstimate;
     }
+	
+	/*
+	* Extra string to add after pts delta/rank estimate readout, originally made for aredl pack bonus
+	*/
+	//overwrite if needed
+	extraStr(rRecs,tRecs){
+		return "";
+	}
 }

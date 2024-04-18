@@ -248,4 +248,16 @@ class ApiAREDL extends ApiInterface{
 		}
 		return foundPacks;
 	}
+	
+	/*
+	* Extra string to add after pts delta/rank estimate readout, originally made for aredl pack bonus
+	*/
+	extraStr(rRecs,tRecs){
+		if(!this.ready){
+			return "";
+		}
+		let rBonus=this.getPackBonusFromArr(rRecs);
+		let tBonus=this.getPackBonusFromArr(tRecs);
+		return "pack bonus went from "+round(rBonus)+" to "+round(tBonus)+", bonus delta: "+round(tBonus-rBonus)+" pts.";
+	}
 }
