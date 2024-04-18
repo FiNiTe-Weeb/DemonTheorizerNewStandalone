@@ -205,3 +205,9 @@
 			font-size:0.75em;
 			padding:4px;
 		}
+		
+		#points-graph-canvas{
+			width: 100%;
+			aspect-ratio: 16/9;
+			border-radius:8px;
+		}

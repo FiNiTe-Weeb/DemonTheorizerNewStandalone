@@ -31,6 +31,17 @@
 		initSelectors();
 	});
 	ApiInterface.getCurrentApiInstance().init();
+	
+	new PointsGraph(document.getElementById("points-graph-canvas"));
+	window.addEventListener("resize",function(){
+		let pointsGraph=PointsGraph.graphs["points-graph-canvas"];
+		if(pointsGraph.open){
+			pointsGraph.onSizeUpdate();
+		}
+	});
+	window.addEventListener("mousemove",function(evt){
+		PointsGraph.graphs["points-graph-canvas"].mouseMoveCallback(evt);
+	});
 
     if(TEST){
         window.calcState=calcState;
@@ -71,6 +82,9 @@
 		loadFormulaBtn.addEventListener("click",loadFormulaButtonCallback);
         let loadApiBtn=document.getElementById("load-api");
 		loadApiBtn.addEventListener("click",loadApiButtonCallback);
+		
+        let togglePointsGraphBtn=document.getElementById("toggle-points-graph");
+		togglePointsGraphBtn.addEventListener("click",togglePointsGraphButtonCallback);
 		
 		
 		let ogRecList=document.getElementById("og-record-list");
@@ -214,6 +228,14 @@
 		calcState.currentPlayer.updateRealPoints();
 		calcState.currentPlayer.updateTheoreticalPoints();
 		calcState.currentPlayer.oHandler.updateOverridesList();
+		PointsGraph.graphs["points-graph-canvas"].draw();
+	}
+	
+	//todo: graph resizing stuff
+	function togglePointsGraphButtonCallback(){
+		let pointsGraphContainer=document.getElementById("points-graph-container");
+		pointsGraphContainer.hidden=!pointsGraphContainer.hidden;
+		PointsGraph.graphs["points-graph-canvas"].onVisibilityToggled(!pointsGraphContainer.hidden);
 	}
 	
 	function loadApiButtonCallback(evt){

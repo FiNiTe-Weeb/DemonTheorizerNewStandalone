@@ -92,7 +92,14 @@
 						<ul>
 						</ul>
 					</div>
-					<button id="load-formula">Set Formula</button>
+					<div>
+						<div class="button-container col6"><button id="load-formula">Set Formula</button></div><!--
+						--><div class="button-container col6"><button id="toggle-points-graph">Toggle points Graph</button></div>
+					</div>
+				</div>
+				<div id="points-graph-container" hidden>
+					Pos:<span id="points-graph-pos-readout">N/A</span>, Score:<span id="points-graph-score-readout">N/A</span>
+					<canvas id="points-graph-canvas"></canvas>
 				</div>
 				<br>
 				<div>
@@ -170,9 +177,28 @@
 		</div>
 	</footer>
 	
+	<script type="text/javascript" src="scripts/logger.js"></script>
+	<script type="text/javascript" src="scripts/utils.js"></script>
+	
+	<script type="text/javascript" src="scripts/ApiInterface.js"></script>
+	<script type="text/javascript" src="scripts/ApiPointercrate.js"></script>
+	<script type="text/javascript" src="scripts/ApiAREDL.js"></script>
+	<script type="text/javascript" src="scripts/ApiInsaneDemonList.js"></script>
+	<script type="text/javascript" src="scripts/ApiLowRefreshRateList.js"></script>
+	<script type="text/javascript" src="scripts/selectors.js"></script>
+	<script type="text/javascript" src="scripts/sortable.js"></script>
+	<script type="text/javascript" src="scripts/popup.js"></script>
+	<script type="text/javascript" src="scripts/pointsGraph.js"></script>
+	
+	<script type="text/javascript" src="scripts/playerState.js"></script>
+	<script type="text/javascript" src="scripts/calcState.js"></script>
+	<script type="text/javascript" src="scripts/overridesHandler.js"></script>
+	<script type="text/javascript" src="/script.js"></script>
+	
 	<script type="text/javascript">
 		function toggleDark(){
 			let darkEnabled=document.body.classList.toggle("dark");
+			PointsGraph.graphs["points-graph-canvas"].draw();
 			setCookie("darkmode",darkEnabled);
 		}
 		document.getElementById("darkModeToggle").addEventListener("click",toggleDark);
@@ -246,22 +272,5 @@
 			}
 		});
 	</script>
-	
-	<script type="text/javascript" src="scripts/logger.js"></script>
-	<script type="text/javascript" src="scripts/utils.js"></script>
-	
-	<script type="text/javascript" src="scripts/ApiInterface.js"></script>
-	<script type="text/javascript" src="scripts/ApiPointercrate.js"></script>
-	<script type="text/javascript" src="scripts/ApiAREDL.js"></script>
-	<script type="text/javascript" src="scripts/ApiInsaneDemonList.js"></script>
-	<script type="text/javascript" src="scripts/ApiLowRefreshRateList.js"></script>
-	<script type="text/javascript" src="scripts/selectors.js"></script>
-	<script type="text/javascript" src="scripts/sortable.js"></script>
-	<script type="text/javascript" src="scripts/popup.js"></script>
-	
-	<script type="text/javascript" src="scripts/playerState.js"></script>
-	<script type="text/javascript" src="scripts/calcState.js"></script>
-	<script type="text/javascript" src="scripts/overridesHandler.js"></script>
-	<script type="text/javascript" src="/script.js"></script>
 </body>
 </html>
