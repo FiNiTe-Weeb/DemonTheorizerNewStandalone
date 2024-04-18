@@ -45,9 +45,11 @@ class PointsGraph{
 		let maxPos=0;
 		for(let lvlID in apiInstance.levelIDtoIndex){ //dumb way to do it but im lazy and copy pasted from draw thing
 			let level=apiInstance.getLevelByID(lvlID);
-			//let score=apiInstance.score(lvlID,100);
-			//maxScore=Math.max(maxScore,score);
-			maxPos=Math.max(maxPos,level.position);
+			let score=apiInstance.score(lvlID,100);
+			if(score>0){
+				//maxScore=Math.max(maxScore,score);
+				maxPos=Math.max(maxPos,level.position);
+			}
 		}
 		let pos=PointsGraph.linearMap(evt.clientX,bounds.left+this.marginsX,bounds.right-this.marginsX,1,maxPos);
 		pos=round(pos,0);
