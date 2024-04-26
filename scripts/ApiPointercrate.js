@@ -8,6 +8,7 @@ class ApiPointercrate extends ApiInterface{
 		this.scoreCache=null;
 		this.formulas={
 			"Latest":this.pointsFormula,
+			"April2024New":this.pointsFormulaApril2024New,
 			"Pre 2022/06/13 update":this.pointsFormulaPre2022_06_13
 		};
 	}
@@ -206,15 +207,7 @@ class ApiPointercrate extends ApiInterface{
                 score=0;
             }
             if(progress!==100){
-                score=
-                (
-                    score * Math.pow(5,
-                    (
-                        (progress - requirement)
-                        /
-                        (100 - requirement))
-                    )
-                )/10;
+                score=ApiPointercrate.commonProgress(score,progress,requirement);
             }
             return score;
         }
@@ -254,17 +247,39 @@ class ApiPointercrate extends ApiInterface{
                 score=0;
             }
             if(progress!==100){
-                score=
-                (
-                    score * Math.pow(5,
-                    (
-                        (progress - requirement)
-                        /
-                        (100 - requirement))
-                    )
-                )/10;
+                score=ApiPointercrate.commonProgress(score,progress,requirement);
             }
             return score;
         }
+	}
+	
+	pointsFormulaApril2024New(position=1,progress=100,requirement=50){
+        if(progress>100){progress=100;}
+        if(progress<requirement){
+            return 0;
+        }
+        let score;
+        if(56<=position && position<=150){
+			score=1.039035131 * ((185.7 * Math.exp(-0.02715 * position)) + 14.84)
+		}else if(36<=position && position<=55){
+			score=1.0371139743 * ((212.61 * Math.pow(1.036,(1 - position))) + 25.071)
+		}else if(21<=position && position<=35){
+			score=((250 - 83.389) * Math.pow(1.0099685,(2 - position)) - 31.152) * 1.0371139743
+		}else if(4<=position && position<=20){
+			score=((326.1 * Math.exp(-0.0871 * position)) + 51.09) * 1.037117142
+		}else if(1<=position && position<=3){
+			score=(-18.2899079915 * position) + 368.2899079915
+        }else{
+            score=0;
+        }
+        if(progress!==100){
+            score=ApiPointercrate.commonProgress(score,progress,requirement);
+        }
+        return score;
+        
+	}
+	
+	static commonProgress(score,progress,requirement){
+		return score * Math.pow(5,  ((progress - requirement)/(100 - requirement))  )   /10;
 	}
 }
