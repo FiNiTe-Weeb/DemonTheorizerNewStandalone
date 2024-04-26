@@ -128,7 +128,6 @@
 			addApiSelector();
 			let apiInstance=ApiInterface.getCurrentApiInstance();
 			let currentApiStr="Currently loaded API: "+calcState.apis[ApiInterface.currentApi].name;
-			currentApiStr+=", Max pts: "+msgIfErrValue(round(apiInstance.getMaxPts()));
 			currentApiStr+=", People with points>0: "+msgIfErrValue(apiInstance.getNumberOfScoreHavers());
 			document.getElementById("current-api").innerText=currentApiStr;
 			setFormula(apiInstance.currentFormula); //this is mostly here to set the current formula text lul
@@ -222,8 +221,11 @@
 		}
 
         log.i("setting formula",formulaName);
-		ApiInterface.getCurrentApiInstance().currentFormula=formulaName;
-		document.getElementById("current-formula").innerText="Current Formula: "+formulaName;
+		let apiInstance=ApiInterface.getCurrentApiInstance();
+		apiInstance.currentFormula=formulaName;
+		let currentFormulaStr="Current Formula: "+formulaName;
+		currentFormulaStr+=", Max pts: "+msgIfErrValue(round(apiInstance.getMaxPts()));
+		document.getElementById("current-formula").innerText=currentFormulaStr;
 		calcState.currentPlayer.updateRRecList();
 		calcState.currentPlayer.updateRealPoints();
 		calcState.currentPlayer.updateTheoreticalPoints();
