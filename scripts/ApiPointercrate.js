@@ -7,8 +7,8 @@ class ApiPointercrate extends ApiInterface{
 		this.scoreCacheEndpoint="https://cf-worker.finite-weeb.xyz/rankcache/pointercrate/leaderboard";
 		this.scoreCache=null;
 		this.formulas={
-			"Latest":this.pointsFormula,
-			"April2024New":this.pointsFormulaApril2024New,
+			"Latest":this.pointsFormula2024_04_25onwards,
+			"June 2022 to April 2024":this.pointsFormula2022_06_13to2024_04_25,
 			"Pre 2022/06/13 update":this.pointsFormulaPre2022_06_13
 		};
 	}
@@ -176,11 +176,12 @@ class ApiPointercrate extends ApiInterface{
 	
 	/*
     * points formula
+	* name goes by git history (gmt)
     * @param position - Ranking on the list
     * @param progress - % Achieved by player
     * @param requirement - % Required for points
     */
-	pointsFormula(position=1,progress=100,requirement=50){
+	pointsFormula2022_06_13to2024_04_25(position=1,progress=100,requirement=50){
         if(progress>100){progress=100;}//sorry guys ur not allowed to have fun :trol
         if(progress<requirement){
             return 0;
@@ -253,7 +254,7 @@ class ApiPointercrate extends ApiInterface{
         }
 	}
 	
-	pointsFormulaApril2024New(position=1,progress=100,requirement=50){
+	pointsFormula2024_04_25onwards(position=1,progress=100,requirement=50){
         if(progress>100){progress=100;}
         if(progress<requirement){
             return 0;
