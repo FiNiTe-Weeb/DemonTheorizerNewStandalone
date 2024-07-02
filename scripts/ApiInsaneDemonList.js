@@ -6,6 +6,7 @@ class ApiInsaneDemonList extends ApiInterface{
 		this.levelNameToID={};
 		this.formulas={
 			"Latest":this.pointsFormula,
+			"Pre 2024/06/18":this.pointsFormulaPre2024_06_18,
 		};
 	}
 	
@@ -141,12 +142,37 @@ class ApiInsaneDemonList extends ApiInterface{
 	}
 	
 	/*
+    * @param position - Ranking on the list
+    * @param progress - % Achieved by player
+    * @param requirement - % Required for points
+    */
+	pointsFormula(position=1,progress=100,requirement=100){
+        if(progress>100){progress=100;}//sorry guys ur not allowed to have fun :trol
+        if(progress<requirement){
+            return 0;
+        }else{
+			let scorePerLevel=1.2583892617449663;//(250-62.5)/149
+			let scoreForTop1=250;
+            let score;
+            if(0<position && position<=150){
+				score=scoreForTop1-((position-1)*1.2583892617449663);
+            }else{
+                score=0;
+            }
+            if(progress!==100){
+                score=0;
+            }
+            return score;
+        }
+	}
+	
+	/*
     * points formula copied from pointercrate
     * @param position - Ranking on the list
     * @param progress - % Achieved by player
     * @param requirement - % Required for points
     */
-	pointsFormula(position=1,progress=100,requirement=50){
+	pointsFormulaPre2024_06_18(position=1,progress=100,requirement=50){
         if(progress>100){progress=100;}//sorry guys ur not allowed to have fun :trol
         if(progress<requirement){
             return 0;
