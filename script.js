@@ -169,6 +169,10 @@
 		let progInput=document.getElementById("progress-input");
         addOverride.addEventListener("click",function(){
             let demID=levelSelector.getAttribute("data-id");
+		    if(progInput.value===""){
+		        alert("Invalid progress, make sure you don't put the percentage sign");
+		        return;
+		    }
             let prog=Number(progInput.value);
             if(!(demID&&(prog==0||prog))){return;}
 
