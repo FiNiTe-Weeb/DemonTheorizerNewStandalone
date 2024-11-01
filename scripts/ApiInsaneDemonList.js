@@ -37,7 +37,7 @@ class ApiInsaneDemonList extends ApiInterface{
 			}
 			
 		});
-		let playerPromise=fetch(this.endpoint+"leaderboards").then(function(resp){
+		let playerPromise=fetch(this.endpoint+"leaderboards?all=true").then(function(resp){
 			if(!resp.ok){
 				return Promise.reject(resp);
 			}
@@ -117,6 +117,7 @@ class ApiInsaneDemonList extends ApiInterface{
 					return rank;
 				}
 			}
+			return this.playerData.length+1;
 		}
 		return -1;
 		
