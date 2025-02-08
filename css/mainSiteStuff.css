@@ -233,18 +233,34 @@
 			border-color:#3F3F3F;
 		}
 		
-		#aboutContent a{
+		.blueLinks a{
 			color:#3F7F7F;
 		}
 		
-		#aboutContent a:hover{
+		.blueLinks a:hover{
 			color:#00FFFF;
 		}
 		
-		.dark #aboutContent a{
+		.dark .blueLinks a{
 			color:#1F7FFF;;
 		}
 		
-		.dark #aboutContent a:hover{
+		.dark .blueLinks a:hover{
+			color:#3FBFFF;
+		}
+		
+		.iamblue{
+			color:#3F7F7F;
+		}
+		
+		.iamblue:hover{
+			color:#00FFFF;
+		}
+		
+		.dark .iamblue{
+			color:#1F7FFF;;
+		}
+		
+		.dark .iamblue:hover{
 			color:#3FBFFF;
 		}
