@@ -9,7 +9,10 @@ class ApiPointercrate extends ApiInterface{
 		this.formulas={
 			"Latest":this.pointsFormula2024_04_25onwards,
 			"June 2022 to April 2024":this.pointsFormula2022_06_13to2024_04_25,
-			"Pre 2022/06/13 update":this.pointsFormulaPre2022_06_13
+			"February 2021 to June 2022":this.pointsFormula2021_02_28to2022_06_13,
+			"May 2020 to February 2021":this.pointsFormula2020_05_21to2021_02_28,
+			"May 2020 to May 2020":this.pointsFormula2020_05_15to2020_05_21,
+			"Pre 2020/05/15 update":this.pointsFormula2020_02_24to2020_05_15,
 		};
 	}
 	
@@ -174,7 +177,79 @@ class ApiPointercrate extends ApiInterface{
 		
     }
 	
-	pointsFormulaPre2022_06_13(position=1,progress=100,requirement=50){
+	/*
+    * points formula
+	* https://github.com/stadust/pointercrate/commit/5fd7b7c3e241f3e8d0256572abe9b2f0c3b404d9#diff-d4a7bc291241aa870af001e4c922c974ebccbb7d03ad40a9c270080dd21a2fc1
+	* name goes by git history (gmt)
+    * @param position - Ranking on the list
+    * @param progress - % Achieved by player
+    * @param requirement - % Required for points
+    */
+	pointsFormula2020_02_24to2020_05_15(position=1,progress=100,requirement=50){
+        if(progress>100){progress=100;}//sorry guys ur not allowed to have fun :trol
+        if(progress<requirement){
+            return 0;
+        }else{
+            let score=150*Math.exp((1 - position) * Math.log(1 / 30) / (-149));
+            if(progress!==100){
+                score=ApiPointercrate.old2020_02_24Progress(score,progress,requirement);
+            }
+            return score;
+        }
+	}
+	
+	/*
+    * points formula
+	* https://github.com/stadust/pointercrate/commit/3760661c3e586e062289e0880458363972521f5d 250 points incident + new progress formula
+	* name goes by git history (gmt)
+    * @param position - Ranking on the list
+    * @param progress - % Achieved by player
+    * @param requirement - % Required for points
+    */
+	pointsFormula2020_05_15to2020_05_21(position=1,progress=100,requirement=50){
+        if(progress>100){progress=100;}//sorry guys ur not allowed to have fun :trol
+        if(progress<requirement){
+            return 0;
+        }else{
+			let baseScore=(position<=10)?250:150;
+            let score=baseScore*Math.exp((1 - position) * Math.log(1 / 30) / (-149));
+            if(progress!==100){
+                score=ApiPointercrate.old2020_05_15Progress(score,progress,requirement);
+            }
+            return score;
+        }
+	}
+	
+	/*
+    * points formula
+	* https://github.com/stadust/pointercrate/commit/d87b8040822b89edf039188c352e2810bc647367 fix top10 points + new progress formula
+	* name goes by git history (gmt)
+    * @param position - Ranking on the list
+    * @param progress - % Achieved by player
+    * @param requirement - % Required for points
+    */
+	pointsFormula2020_05_21to2021_02_28(position=1,progress=100,requirement=50){
+        if(progress>100){progress=100;}//sorry guys ur not allowed to have fun :trol
+        if(progress<requirement){
+            return 0;
+        }else{
+            let score=150*Math.exp((1 - position) * Math.log(1 / 30) / (-149));
+            if(progress!==100){
+                score=ApiPointercrate.commonProgress(score,progress,requirement);
+            }
+            return score;
+        }
+	}
+	
+	/*
+    * points formula
+	* https://github.com/stadust/pointercrate/commit/5b992cd12b591003ea56afc2e50182a50f11cf01
+	* name goes by git history (gmt)
+    * @param position - Ranking on the list
+    * @param progress - % Achieved by player
+    * @param requirement - % Required for points
+    */
+	pointsFormula2021_02_28to2022_06_13(position=1,progress=100,requirement=50){
         if(progress>100){progress=100;}//sorry guys ur not allowed to have fun :trol
         if(progress<requirement){
             return 0;
@@ -215,7 +290,7 @@ class ApiPointercrate extends ApiInterface{
 	}
 	
 	/*
-    * points formula
+    * https://github.com/stadust/pointercrate/commit/f44f123a1aa9afbe214bccb041d2574099758385
 	* name goes by git history (gmt)
     * @param position - Ranking on the list
     * @param progress - % Achieved by player
@@ -254,6 +329,14 @@ class ApiPointercrate extends ApiInterface{
         }
 	}
 	
+	/*
+    * points formula
+	* https://github.com/stadust/pointercrate/commit/4a20ea3ad1d4e417b1da4eab784efb0b8a361e37
+	* name goes by git history (gmt)
+    * @param position - Ranking on the list
+    * @param progress - % Achieved by player
+    * @param requirement - % Required for points
+    */
 	pointsFormula2024_04_25onwards(position=1,progress=100,requirement=50){
         if(progress>100){progress=100;}
         if(progress<requirement){
@@ -278,6 +361,14 @@ class ApiPointercrate extends ApiInterface{
         }
         return score;
         
+	}
+	
+	static old2020_02_24Progress(score,progress,requirement){
+		return score * (0.25 + (progress - requirement) / (100 - requirement) * 0.25);
+	}
+	
+	static old2020_05_15Progress(score,progress,requirement){
+		return (score * (Math.pow(46,(progress - requirement) / (100 - requirement)) + 4)) / 100;
 	}
 	
 	static commonProgress(score,progress,requirement){
