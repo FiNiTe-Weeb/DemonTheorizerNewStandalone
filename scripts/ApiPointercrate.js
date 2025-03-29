@@ -12,7 +12,7 @@ class ApiPointercrate extends ApiInterface{
 			"February 2021 to June 2022":this.pointsFormula2021_02_28to2022_06_13,
 			"May 2020 to February 2021":this.pointsFormula2020_05_21to2021_02_28,
 			"May 2020 to May 2020":this.pointsFormula2020_05_15to2020_05_21,
-			"Pre 2020/05/15 update":this.pointsFormula2020_02_24to2020_05_15,
+			"Pre 2020/05/15 update":this.pointsFormula2019_07_08to2020_05_15,
 		};
 	}
 	
@@ -178,14 +178,14 @@ class ApiPointercrate extends ApiInterface{
     }
 	
 	/*
-    * points formula
-	* https://github.com/stadust/pointercrate/commit/5fd7b7c3e241f3e8d0256572abe9b2f0c3b404d9#diff-d4a7bc291241aa870af001e4c922c974ebccbb7d03ad40a9c270080dd21a2fc1
+    * https://github.com/stadust/pointercrate/commit/41f86a6675c84c1a15d5c47a42e942095eca7e56#diff-672d8e945eaae05cd71c29949b60333e89e477c55931ce5293f98c0746c6b248 seems like og commit of this
+	* https://github.com/stadust/pointercrate/commit/5fd7b7c3e241f3e8d0256572abe9b2f0c3b404d9#diff-d4a7bc291241aa870af001e4c922c974ebccbb7d03ad40a9c270080dd21a2fc1 files moved
 	* name goes by git history (gmt)
     * @param position - Ranking on the list
     * @param progress - % Achieved by player
     * @param requirement - % Required for points
     */
-	pointsFormula2020_02_24to2020_05_15(position=1,progress=100,requirement=50){
+	pointsFormula2019_07_08to2020_05_15(position=1,progress=100,requirement=50){
         if(progress>100){progress=100;}//sorry guys ur not allowed to have fun :trol
         if(progress<requirement){
             return 0;
@@ -199,7 +199,6 @@ class ApiPointercrate extends ApiInterface{
 	}
 	
 	/*
-    * points formula
 	* https://github.com/stadust/pointercrate/commit/3760661c3e586e062289e0880458363972521f5d 250 points incident + new progress formula
 	* name goes by git history (gmt)
     * @param position - Ranking on the list
@@ -221,7 +220,6 @@ class ApiPointercrate extends ApiInterface{
 	}
 	
 	/*
-    * points formula
 	* https://github.com/stadust/pointercrate/commit/d87b8040822b89edf039188c352e2810bc647367 fix top10 points + new progress formula
 	* name goes by git history (gmt)
     * @param position - Ranking on the list
@@ -242,7 +240,6 @@ class ApiPointercrate extends ApiInterface{
 	}
 	
 	/*
-    * points formula
 	* https://github.com/stadust/pointercrate/commit/5b992cd12b591003ea56afc2e50182a50f11cf01
 	* name goes by git history (gmt)
     * @param position - Ranking on the list
