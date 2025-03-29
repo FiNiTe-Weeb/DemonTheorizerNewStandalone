@@ -12,7 +12,10 @@ class ApiPointercrate extends ApiInterface{
 			"February 2021 to June 2022":this.pointsFormula2021_02_28to2022_06_13,
 			"May 2020 to February 2021":this.pointsFormula2020_05_21to2021_02_28,
 			"May 2020 to May 2020":this.pointsFormula2020_05_15to2020_05_21,
-			"Pre 2020/05/15 update":this.pointsFormula2019_07_08to2020_05_15,
+			"July 2019 to May 2020":this.pointsFormula2019_07_08to2020_05_15,
+			"March 2019 to July 2019":this.pointsFormula2019_03_04to2019_07_08,
+			"Unused? Feb 2019 formula":this.pointsFormula2019_02_24UNUSED,
+			"Pre 2019/03/04 update":this.pointsFormulaPre2019_03_04
 		};
 	}
 	
@@ -176,6 +179,76 @@ class ApiPointercrate extends ApiInterface{
 		return -1;
 		
     }
+	
+	/*
+	* I got this from screenshot in announcements channel
+    * https://discord.com/channels/395654171422097420/395692399919366147/553781885285957655
+    * @param position - Ranking on the list
+    * @param progress - % Achieved by player
+    * @param requirement - % Required for points
+    */
+	pointsFormulaPre2019_03_04(position=1,progress=100,requirement=50){
+        if(progress>100){progress=100;}//sorry guys ur not allowed to have fun :trol
+		if(position>100){return 0;}
+        if(progress<requirement){
+            return 0;
+        }else{
+			let listLen=100;
+            let score=listLen/((listLen/5)+((-listLen/5)+1)*Math.exp(-0.008*position));
+            if(progress!==100){
+                score=ApiPointercrate.old2019_03_04Progress(score,progress,requirement); //idk if this is correct but i hope it is
+            }
+			return score;
+		}
+	}
+	
+	/*
+	* I don't think this one was ever actually used
+    * https://github.com/stadust/pointercrate/commit/50a71d6331b83dddb864376400e76a58c8dde5f3#diff-672d8e945eaae05cd71c29949b60333e89e477c55931ce5293f98c0746c6b248
+	* name goes by git history (gmt)
+    * @param position - Ranking on the list
+    * @param progress - % Achieved by player
+    * @param requirement - % Required for points
+    */
+	pointsFormula2019_02_24UNUSED(position=1,progress=100,requirement=50){
+        if(progress>100){progress=100;}//sorry guys ur not allowed to have fun :trol
+		if(position>100){return 0;}
+        if(progress<requirement){
+            return 0;
+        }else{
+			let listLen=100;
+            let score=
+			Math.pow(progress / 100, position) * listLen
+				/ (1
+					+ (listLen - 1)
+						* Math.exp(
+							(-4 * Math.ln(listLen - 1) * (listLen - position))
+								/ (3 * listLen),
+						))
+			return score;
+		}
+	}
+	
+	/*
+    * https://github.com/stadust/pointercrate/commit/06f720fa1ea139c0f72814c245084e25babc21c7#diff-cfb402317f9a1267396cd28c72ab83f4236dca6ebbf2f87ed850f2b82da5862d
+	* name goes by git history (gmt)
+    * @param position - Ranking on the list
+    * @param progress - % Achieved by player
+    * @param requirement - % Required for points
+    */
+	pointsFormula2019_03_04to2019_07_08(position=1,progress=100,requirement=50){
+        if(progress>100){progress=100;}//sorry guys ur not allowed to have fun :trol
+		if(position>100){return 0;}
+        if(progress<requirement){
+            return 0;
+        }else{
+            let score=100.0 * Math.exp(-0.03 * (position - 1.0))
+            if(progress!==100){
+                score=ApiPointercrate.old2019_03_04Progress(score,progress,requirement);
+            }
+            return score;
+        }
+	}
 	
 	/*
     * https://github.com/stadust/pointercrate/commit/41f86a6675c84c1a15d5c47a42e942095eca7e56#diff-672d8e945eaae05cd71c29949b60333e89e477c55931ce5293f98c0746c6b248 seems like og commit of this
@@ -358,6 +431,10 @@ class ApiPointercrate extends ApiInterface{
         }
         return score;
         
+	}
+	
+	static old2019_03_04Progress(score,progress,requirement){
+		return score * Math.pow(progress / 100.0, 5.0);
 	}
 	
 	static old2020_02_24Progress(score,progress,requirement){
