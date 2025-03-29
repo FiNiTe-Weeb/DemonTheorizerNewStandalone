@@ -174,46 +174,6 @@ class ApiPointercrate extends ApiInterface{
 		
     }
 	
-	/*
-    * points formula
-	* name goes by git history (gmt)
-    * @param position - Ranking on the list
-    * @param progress - % Achieved by player
-    * @param requirement - % Required for points
-    */
-	pointsFormula2022_06_13to2024_04_25(position=1,progress=100,requirement=50){
-        if(progress>100){progress=100;}//sorry guys ur not allowed to have fun :trol
-        if(progress<requirement){
-            return 0;
-        }else{//god this was a pain to write out
-            let score;
-            if(55<position && position<=150){
-				let b=6.273;
-                score=56.191*Math.pow(2,(54.147-(position+3.2))*((Math.log(50))/99))+b;
-            } else if(35 < position && position <= 55){
-                let g = 1.036;
-                let h = 25.071;
-                score=212.61 * Math.pow(g,1-position) + h;
-            }else if(20 < position && position <= 35){
-                let c = 1.0099685;
-                let d = 31.152;
-                score=(250-83.389)*Math.pow(c,2-position)-d; 
-            }else if(0 < position && position <= 20){
-                let e = 1.168;
-                let f = 100.39;
-                score=(250 - f) * (
-                    Math.pow(e,1-position)
-                ) + f
-            }else{
-                score=0;
-            }
-            if(progress!==100){
-                score=ApiPointercrate.commonProgress(score,progress,requirement);
-            }
-            return score;
-        }
-	}
-	
 	pointsFormulaPre2022_06_13(position=1,progress=100,requirement=50){
         if(progress>100){progress=100;}//sorry guys ur not allowed to have fun :trol
         if(progress<requirement){
@@ -238,6 +198,46 @@ class ApiPointercrate extends ApiInterface{
                 score= -100 * (
                     Math.pow(c,position - d)
                 ) + 200;
+            }else if(0 < position && position <= 20){
+                let e = 1.168;
+                let f = 100.39;
+                score=(250 - f) * (
+                    Math.pow(e,1-position)
+                ) + f
+            }else{
+                score=0;
+            }
+            if(progress!==100){
+                score=ApiPointercrate.commonProgress(score,progress,requirement);
+            }
+            return score;
+        }
+	}
+	
+	/*
+    * points formula
+	* name goes by git history (gmt)
+    * @param position - Ranking on the list
+    * @param progress - % Achieved by player
+    * @param requirement - % Required for points
+    */
+	pointsFormula2022_06_13to2024_04_25(position=1,progress=100,requirement=50){
+        if(progress>100){progress=100;}//sorry guys ur not allowed to have fun :trol
+        if(progress<requirement){
+            return 0;
+        }else{//god this was a pain to write out
+            let score;
+            if(55<position && position<=150){
+				let b=6.273;
+                score=56.191*Math.pow(2,(54.147-(position+3.2))*((Math.log(50))/99))+b;
+            } else if(35 < position && position <= 55){
+                let g = 1.036;
+                let h = 25.071;
+                score=212.61 * Math.pow(g,1-position) + h;
+            }else if(20 < position && position <= 35){
+                let c = 1.0099685;
+                let d = 31.152;
+                score=(250-83.389)*Math.pow(c,2-position)-d; 
             }else if(0 < position && position <= 20){
                 let e = 1.168;
                 let f = 100.39;
