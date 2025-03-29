@@ -222,7 +222,7 @@ class ApiPointercrate extends ApiInterface{
 				/ (1
 					+ (listLen - 1)
 						* Math.exp(
-							(-4 * Math.ln(listLen - 1) * (listLen - position))
+							(-4 * Math.log(listLen - 1) * (listLen - position))
 								/ (3 * listLen),
 						))
 			return score;
