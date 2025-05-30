@@ -227,13 +227,13 @@ class ApiAREDL extends ApiInterface{
 			}
 			
 			for(let i=0;i<this.scoreCache.length;i++){
-				if(round(score,1)>=round(this.scoreCache[i].points,1)){//round to avoid float weirdness
+				if(round(score,1)>=round((this.scoreCache[i].total_points/10),1)){//round to avoid float weirdness
 					let rank=i+1;
 					if(actualRank<rank){rank--;} //if their real rank is above (smaller) their theoretical rank, we remove 1 from the rank to account for the fact there should be 1 less spot taken
 					return rank;
 				}
 			}
-			if(round(this.scoreCache[this.scoreCache.length-1].points,1)>round(score,1)){ //if less score than anyone on lb
+			if(round((this.scoreCache[this.scoreCache.length-1].total_points/10),1)>round(score,1)){ //if less score than anyone on lb
 				return this.scoreCache.length+1;
 			}
 		}
