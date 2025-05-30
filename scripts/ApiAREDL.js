@@ -1,6 +1,6 @@
 class ApiAREDL extends ApiInterface{
 	constructor(apiEndpoint){
-		super("https://api.aredl.net/api/");
+		super("https://api.aredl.net/v2/api/");
 		this.scoreCacheEndpoint="https://cf-worker.finite-weeb.xyz/rankcache/aredl/leaderboard";
 		this.scoreCache=null;
 		this.formulas={
@@ -14,8 +14,11 @@ class ApiAREDL extends ApiInterface{
 	//OVERWRITE
 	init(){
 		let thisRef=this;
-		let listPromise=fetchJSON(this.endpoint+"aredl/list").then(function(data){
+		let listPromise=fetchJSON(this.endpoint+"aredl/levels").then(function(data){
 			thisRef.levelData=data;
+			for(let key in thisRef.levelData){
+				thisRef.levelData[key].points=(thisRef.levelData[key].points/10);
+			}
 			thisRef.levelPositionToId={};
 			thisRef.levelIDtoIndex={};
 			for(let key in thisRef.levelData){
@@ -26,8 +29,16 @@ class ApiAREDL extends ApiInterface{
 			}
 			return Promise.resolve(); //not really necessary but maybe makes it more clear it resolves idk
 		});
-		let packsPromise=fetchJSON(this.endpoint+"aredl/packs").then(function(data){
-			thisRef.packs=data;
+		let packsPromise=fetchJSON(this.endpoint+"aredl/pack-tiers").then(function(data){
+			let packs=[];
+			for(let packTierKey in data){
+				let packTier=data[packTierKey];
+				for(let packKey in packTier.packs){
+					packTier.packs[packKey].points=(packTier.packs[packKey].points/10);
+					packs.push(packTier.packs[packKey]);
+				}
+			}
+			thisRef.packs=packs;
 			thisRef.packIDToIndex={};
 			for(let i=0;i<thisRef.packs.length;i++){
 				let pack=thisRef.packs[i];
@@ -59,10 +70,10 @@ class ApiAREDL extends ApiInterface{
 	
 	//OVERWRITE
 	searchPlayer(name){
-		return fetchJSON(this.endpoint+"aredl/leaderboard?name_filter="+name).then(function(data){
+		return fetchJSON(this.endpoint+"aredl/leaderboard?name_filter=%"+name+"%").then(function(data){
 			let foundPlayers=[];
-			for(let key in data.list){
-				let item=data.list[key];
+			for(let key in data.data){
+				let item=data.data[key];
 				foundPlayers.push({
 					id:item.user.id,
 					name:item.user.global_name,
@@ -80,7 +91,7 @@ class ApiAREDL extends ApiInterface{
 		if(thisRef.loadedPlayersData[playerID]&&(!forceUpdate)){
 			playerFetchPromise=Promise.resolve(thisRef.loadedPlayersData[playerID]);
 		}else{
-			playerFetchPromise=fetchJSON(this.endpoint+"aredl/profiles/"+playerID);
+			playerFetchPromise=fetchJSON(this.endpoint+"aredl/profile/"+playerID);
 		}
 		
 		return playerFetchPromise.then(function(data){
@@ -88,6 +99,10 @@ class ApiAREDL extends ApiInterface{
 			let processedRecords={};
 			for(let key in data.records){
 				let item=data.records[key];
+				processedRecords[item.level.id]={progress:100};
+			}
+			for(let key in data.verified){
+				let item=data.verified[key];
 				processedRecords[item.level.id]={progress:100};
 			}
 			return {
