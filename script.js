@@ -30,7 +30,6 @@
 		loadApi(startApi);
 		initSelectors();
 	});
-	ApiInterface.getCurrentApiInstance().init();
 	
 	new PointsGraph(document.getElementById("points-graph-canvas"));
 	window.addEventListener("resize",function(){
