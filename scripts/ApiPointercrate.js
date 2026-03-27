@@ -69,7 +69,7 @@ class ApiPointercrate extends ApiInterface{
         log.i("loading page "+(afterPage+1));
 		let thisRef=this;
         let fetchPromise=new Promise(function(res,rej){//todo: handle error idk
-            fetch(thisRef.endpoint+"v2/demons/listed?limit="+Math.min(pageLength,limit)+"&after="+(afterPage*pageLength)).then(function(resp){
+            fetch(thisRef.endpoint+"v2/demons/listed/?limit="+Math.min(pageLength,limit)+"&after="+(afterPage*pageLength)).then(function(resp){
 				if(!resp.ok){
 					return Promise.reject(resp);
 				}
