@@ -14,7 +14,7 @@ class ApiAREDL extends ApiInterface{
 	//OVERWRITE
 	init(){
 		let thisRef=this;
-		let listPromise=fetchJSON(this.endpoint+"aredl/levels").then(function(data){
+		let listPromise=fetchJSON(this.endpoint+"aredl/levels?exclude_legacy=false&exclude_pending=false&exclude_removed=false").then(function(data){
 			thisRef.levelData=data;
 			for(let key in thisRef.levelData){
 				thisRef.levelData[key].points=(thisRef.levelData[key].points/10);
@@ -156,9 +156,9 @@ class ApiAREDL extends ApiInterface{
 			let points=this.score(key,item.progress);
 			recordsInfo.push({
 				levelID:key,
-				position:levelInfo.position,
+				position:(levelInfo.position!=null?levelInfo.position:Infinity), //send null to the back
 				points:points,
-				html:item.progress+"% on #"+levelInfo.position+": "+levelInfo.name+", for "+round(points)+"pts"
+				html:item.progress+"% on "+((levelInfo.position!=null)?("#"+levelInfo.position):"Unranked")+": "+levelInfo.name+", for "+round(points)+"pts"
 			});
 		}
 		recordsInfo.sort(function(a,b){
